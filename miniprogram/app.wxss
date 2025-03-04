@@ -1,0 +1,112 @@
+/**app.wxss**/
+page {
+  --primary-color: #FF7F24;
+  --secondary-color: #FFA454;
+  --text-color: #333333;
+  --text-color-light: #999999;
+  --bg-color: #F8F8F8;
+  --price-color: #FF5722;
+  --border-color: #EEEEEE;
+  
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-size: 28rpx;
+  color: var(--text-color);
+  background-color: var(--bg-color);
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  padding: 30rpx;
+}
+
+.flex-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.space-between {
+  justify-content: space-between;
+}
+
+.text-primary {
+  color: var(--primary-color);
+}
+
+.price {
+  color: var(--price-color);
+  font-weight: bold;
+}
+
+.card {
+  background-color: #FFFFFF;
+  border-radius: 16rpx;
+  overflow: hidden;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.05);
+  margin-bottom: 20rpx;
+}
+
+.btn-primary {
+  background-color: var(--primary-color);
+  color: #FFFFFF;
+  border: none;
+  border-radius: 40rpx;
+  padding: 20rpx 40rpx;
+  font-size: 28rpx;
+}
+
+.btn-outline {
+  background-color: #FFFFFF;
+  color: var(--primary-color);
+  border: 2rpx solid var(--primary-color);
+  border-radius: 40rpx;
+  padding: 18rpx 38rpx;
+  font-size: 28rpx;
+}
+
+.tag {
+  display: inline-block;
+  padding: 4rpx 12rpx;
+  background-color: rgba(255, 127, 36, 0.1);
+  color: var(--primary-color);
+  border-radius: 6rpx;
+  font-size: 24rpx;
+  margin-right: 10rpx;
+}
+
+.divider {
+  height: 2rpx;
+  background-color: var(--border-color);
+  width: 100%;
+  margin: 20rpx 0;
+}
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  padding: 30rpx 0 20rpx;
+  display: flex;
+  align-items: center;
+}
+
+.section-title::before {
+  content: "";
+  display: inline-block;
+  width: 8rpx;
+  height: 32rpx;
+  background-color: var(--primary-color);
+  margin-right: 16rpx;
+  border-radius: 4rpx;
+}

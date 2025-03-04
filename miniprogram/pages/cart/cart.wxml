@@ -1,0 +1,77 @@
+<view class="container">
+  <view wx:if="{{cartItems.length === 0}}" class="empty-cart">
+    <image src="../../images/empty-cart.png" mode="aspectFit" class="empty-cart-image"></image>
+    <view class="empty-cart-text">购物车空空如也，快去选购吧~</view>
+    <button class="go-shopping-btn" bindtap="navigateToMenu">去购物</button>
+  </view>
+  
+  <block wx:else>
+    <view class="cart-header">
+      <view class="cart-title">已选商品</view>
+      <view class="clear-cart" bindtap="clearCart">清空购物车</view>
+    </view>
+    
+    <view class="cart-items">
+      <view class="cart-item" wx:for="{{cartItems}}" wx:key="id">
+        <image class="cart-item-image" src="{{item.imageUrl}}" mode="aspectFill"></image>
+        <view class="cart-item-info">
+          <view class="cart-item-name">{{item.name}}</view>
+          <view class="cart-item-weight">{{item.weight}}</view>
+          <view class="cart-item-bottom">
+            <view class="cart-item-price">¥{{item.price}}</view>
+            <view class="quantity-control">
+              <view class="minus-btn" bindtap="decreaseQuantity" data-id="{{item.id}}">-</view>
+              <input class="quantity-input" type="number" value="{{item.quantity}}" bindinput="onQuantityInput" data-id="{{item.id}}"/>
+              <view class="add-btn" bindtap="increaseQuantity" data-id="{{item.id}}">+</view>
+            </view>
+          </view>
+        </view>
+        <view class="delete-btn" bindtap="removeItem" data-id="{{item.id}}">×</view>
+      </view>
+    </view>
+    
+    <view class="delivery-address" bindtap="selectAddress">
+      <view class="address-icon"></view>
+      <view class="address-content">
+        <view wx:if="{{!address}}" class="no-address">请选择收货地址</view>
+        <view wx:else class="address-info">
+          <view class="address-top">
+            <text class="address-name">{{address.name}}</text>
+            <text class="address-phone">{{address.phone}}</text>
+          </view>
+          <view class="address-detail">{{address.province}}{{address.city}}{{address.district}}{{address.detail}}</view>
+        </view>
+      </view>
+      <view class="address-arrow"></view>
+    </view>
+    
+    <view class="order-summary">
+      <view class="summary-item">
+        <text>商品金额</text>
+        <text>¥{{totalPrice}}</text>
+      </view>
+      <view class="summary-item">
+        <text>配送费</text>
+        <text>¥{{deliveryFee}}</text>
+      </view>
+      <view class="summary-divider"></view>
+      <view class="summary-total">
+        <text>合计</text>
+        <text class="total-amount">¥{{totalAmount}}</text>
+      </view>
+    </view>
+    
+    <view class="remarks">
+      <view class="remarks-title">订单备注：</view>
+      <textarea class="remarks-input" placeholder="请输入备注信息（选填）" value="{{remarks}}" bindinput="onRemarksInput" maxlength="50"></textarea>
+    </view>
+    
+    <view class="checkout-bar">
+      <view class="total-info">
+        <text>合计：</text>
+        <text class="total-price">¥{{totalAmount}}</text>
+      </view>
+      <button class="checkout-btn" bindtap="placeOrder">提交订单</button>
+    </view>
+  </block>
+</view>

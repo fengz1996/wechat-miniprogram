@@ -1,0 +1,291 @@
+.container {
+  padding: 30rpx;
+  padding-bottom: 150rpx;
+}
+
+.empty-cart {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 100rpx;
+}
+
+.empty-cart-image {
+  width: 240rpx;
+  height: 240rpx;
+  margin-bottom: 40rpx;
+}
+
+.empty-cart-text {
+  font-size: 30rpx;
+  color: #999999;
+  margin-bottom: 40rpx;
+}
+
+.go-shopping-btn {
+  background-color: var(--primary-color);
+  color: white;
+  width: 300rpx;
+  height: 80rpx;
+  line-height: 80rpx;
+  border-radius: 40rpx;
+  font-size: 30rpx;
+}
+
+.cart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30rpx;
+}
+
+.cart-title {
+  font-size: 32rpx;
+  font-weight: bold;
+}
+
+.clear-cart {
+  font-size: 28rpx;
+  color: #999999;
+}
+
+.cart-items {
+  background-color: #FFFFFF;
+  border-radius: 16rpx;
+  overflow: hidden;
+  margin-bottom: 30rpx;
+}
+
+.cart-item {
+  display: flex;
+  padding: 30rpx;
+  border-bottom: 2rpx solid #F5F5F5;
+  position: relative;
+}
+
+.cart-item-image {
+  width: 160rpx;
+  height: 160rpx;
+  border-radius: 8rpx;
+  margin-right: 20rpx;
+}
+
+.cart-item-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.cart-item-name {
+  font-size: 30rpx;
+  font-weight: 500;
+  margin-bottom: 10rpx;
+}
+
+.cart-item-weight {
+  font-size: 24rpx;
+  color: #999999;
+  margin-bottom: 40rpx;
+}
+
+.cart-item-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+}
+
+.cart-item-price {
+  color: var(--price-color);
+  font-weight: bold;
+  font-size: 32rpx;
+}
+
+.quantity-control {
+  display: flex;
+  align-items: center;
+}
+
+.minus-btn, .add-btn {
+  width: 50rpx;
+  height: 50rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28rpx;
+}
+
+.minus-btn {
+  border: 2rpx solid #E0E0E0;
+  color: #999999;
+}
+
+.add-btn {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.quantity-input {
+  width: 60rpx;
+  text-align: center;
+  font-size: 28rpx;
+}
+
+.delete-btn {
+  position: absolute;
+  top: 20rpx;
+  right: 20rpx;
+  width: 40rpx;
+  height: 40rpx;
+  border-radius: 50%;
+  background-color: #F5F5F5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24rpx;
+  color: #999999;
+}
+
+.delivery-address {
+  display: flex;
+  align-items: center;
+  background-color: #FFFFFF;
+  border-radius: 16rpx;
+  padding: 30rpx;
+  margin-bottom: 30rpx;
+}
+
+.address-icon {
+  margin-right: 20rpx;
+}
+
+.address-content {
+  flex: 1;
+}
+
+.no-address {
+  color: #999999;
+  font-size: 30rpx;
+}
+
+.address-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.address-top {
+  margin-bottom: 10rpx;
+}
+
+.address-name {
+  font-size: 30rpx;
+  font-weight: 500;
+  margin-right: 20rpx;
+}
+
+.address-phone {
+  font-size: 28rpx;
+  color: #666666;
+}
+
+.address-detail {
+  font-size: 28rpx;
+  color: #333333;
+}
+
+.address-arrow {
+  margin-left: 20rpx;
+}
+
+.order-summary {
+  background-color: #FFFFFF;
+  border-radius: 16rpx;
+  padding: 30rpx;
+  margin-bottom: 30rpx;
+}
+
+.summary-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20rpx;
+  font-size: 28rpx;
+}
+
+.summary-divider {
+  height: 2rpx;
+  background-color: #F5F5F5;
+  margin: 20rpx 0;
+}
+
+.summary-total {
+  display: flex;
+  justify-content: space-between;
+  font-size: 30rpx;
+  font-weight: bold;
+}
+
+.total-amount {
+  color: var(--price-color);
+}
+
+.remarks {
+  background-color: #FFFFFF;
+  border-radius: 16rpx;
+  padding: 30rpx;
+  margin-bottom: 30rpx;
+}
+
+.remarks-title {
+  font-size: 30rpx;
+  font-weight: 500;
+  margin-bottom: 20rpx;
+}
+
+.remarks-input {
+  width: 100%;
+  height: 160rpx;
+  font-size: 28rpx;
+  line-height: 1.5;
+  padding: 20rpx;
+  box-sizing: border-box;
+  background-color: #F8F8F8;
+  border-radius: 8rpx;
+}
+
+.checkout-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 120rpx;
+  background-color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  padding: 0 30rpx;
+  box-shadow: 0 -2rpx 10rpx rgba(0, 0, 0, 0.05);
+  z-index: 100;
+}
+
+.total-info {
+  flex: 1;
+  font-size: 30rpx;
+}
+
+.total-price {
+  color: var(--price-color);
+  font-weight: bold;
+  font-size: 34rpx;
+}
+
+.checkout-btn {
+  width: 240rpx;
+  height: 80rpx;
+  background-color: var(--primary-color);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 40rpx;
+  font-size: 30rpx;
+}

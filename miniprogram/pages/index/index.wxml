@@ -1,0 +1,58 @@
+<view class="container">
+  <view class="banner">
+    <swiper indicator-dots autoplay circular interval="3000" duration="500">
+      <swiper-item wx:for="{{banners}}" wx:key="id">
+        <image src="{{item.imageUrl}}" mode="aspectFill" class="banner-image" />
+      </swiper-item>
+    </swiper>
+  </view>
+
+  <view class="announcement">
+    <view class="announcement-icon">
+      <image src="../../images/announcement.png" mode="aspectFit"></image>
+    </view>
+    <view class="announcement-text">
+      <text>营业时间: 9:00-24:00 | 满68元城区花园内免费配送</text>
+    </view>
+  </view>
+
+  <view class="section">
+    <view class="section-title">热门推荐</view>
+    <view class="hot-dishes">
+      <view class="dish-card" wx:for="{{hotDishes}}" wx:key="id" bindtap="navigateToDish" data-id="{{item.id}}">
+        <image src="{{item.imageUrl}}" mode="aspectFill" class="dish-image"></image>
+        <view class="dish-info">
+          <view class="dish-name">{{item.name}}</view>
+          <view class="dish-price-row">
+            <text class="dish-price">¥{{item.price}}</text>
+            <view class="add-btn" catchtap="addToCart" data-item="{{item}}">+</view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="section">
+    <view class="section-title">菜品分类</view>
+    <view class="categories">
+      <view class="category-item" wx:for="{{categories}}" wx:key="id" bindtap="navigateToMenu" data-category="{{item.id}}">
+        <image src="{{item.imageUrl}}" mode="aspectFill" class="category-image"></image>
+        <text class="category-name">{{item.name}}</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="contact-section">
+    <view class="contact-title">商家信息</view>
+    <view class="contact-info">
+      <view class="contact-item">
+        <text class="location-icon"></text>
+        <text>巴巴美食 (花园店)</text>
+      </view>
+      <view class="contact-item">
+        <text class="phone-icon"></text>
+        <text>联系电话: 123-4567-8910</text>
+      </view>
+    </view>
+  </view>
+</view>

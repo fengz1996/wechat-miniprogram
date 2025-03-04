@@ -1,0 +1,148 @@
+.banner {
+  width: 100%;
+  height: 350rpx;
+  margin-bottom: 30rpx;
+}
+
+.banner-image {
+  width: 100%;
+  height: 100%;
+  border-radius: 16rpx;
+}
+
+.announcement {
+  display: flex;
+  align-items: center;
+  background-color: rgba(255, 127, 36, 0.1);
+  padding: 16rpx 24rpx;
+  border-radius: 8rpx;
+  margin-bottom: 30rpx;
+}
+
+.announcement-icon {
+  width: 40rpx;
+  height: 40rpx;
+  margin-right: 16rpx;
+}
+
+.announcement-icon image {
+  width: 100%;
+  height: 100%;
+}
+
+.announcement-text {
+  font-size: 24rpx;
+  color: var(--primary-color);
+}
+
+.hot-dishes {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.dish-card {
+  width: 48%;
+  background-color: #FFFFFF;
+  border-radius: 12rpx;
+  overflow: hidden;
+  margin-bottom: 20rpx;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.05);
+}
+
+.dish-image {
+  width: 100%;
+  height: 200rpx;
+}
+
+.dish-info {
+  padding: 16rpx;
+}
+
+.dish-name {
+  font-weight: 500;
+  margin-bottom: 10rpx;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dish-price-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.dish-price {
+  color: var(--price-color);
+  font-weight: bold;
+}
+
+.add-btn {
+  width: 44rpx;
+  height: 44rpx;
+  border-radius: 50%;
+  background-color: var(--primary-color);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28rpx;
+  font-weight: bold;
+}
+
+.categories {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.category-item {
+  width: 23%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+
+.category-image {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 50%;
+  margin-bottom: 10rpx;
+}
+
+.category-name {
+  font-size: 24rpx;
+  text-align: center;
+}
+
+.contact-section {
+  background-color: #FFFFFF;
+  border-radius: 12rpx;
+  padding: 24rpx;
+  margin-top: 20rpx;
+}
+
+.contact-title {
+  font-size: 30rpx;
+  font-weight: bold;
+  margin-bottom: 16rpx;
+  color: var(--text-color);
+}
+
+.contact-info {
+  font-size: 26rpx;
+  color: var(--text-color-light);
+}
+
+.contact-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10rpx;
+}
+
+.location-icon, .phone-icon {
+  margin-right: 10rpx;
+  color: var(--primary-color);
+}

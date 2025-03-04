@@ -1,0 +1,46 @@
+<view class="container">
+  <view class="user-info">
+    <view class="avatar-container" bindtap="getUserProfile">
+      <image class="avatar" src="{{userInfo.avatarUrl || '../../images/default-avatar.png'}}"></image>
+    </view>
+    <view class="user-detail">
+      <view class="user-name" bindtap="getUserProfile">{{userInfo.nickName || '点击登录'}}</view>
+      <view class="user-phone" wx:if="{{userPhone}}">{{userPhone}}</view>
+    </view>
+  </view>
+  
+  <view class="card order-card">
+    <view class="card-header">
+      <view class="card-title">我的订单</view>
+      <view class="view-all" bindtap="navigateToOrder">全部订单 ></view>
+    </view>
+    <view class="order-icons">
+      <view class="order-icon-item" bindtap="navigateToOrderWithStatus" data-status="pending">
+        <view class="order-icon pending-icon"></view>
+        <view class="order-icon-text">待配送</view>
+      </view>
+      <view class="order-icon-item" bindtap="navigateToOrderWithStatus" data-status="completed">
+        <view class="order-icon completed-icon"></view>
+        <view class="order-icon-text">已完成</view>
+      </view>
+    </view>
+  </view>
+  
+  <view class="menu-list">
+    <view class="menu-item" bindtap="navigateToAddress">
+      <view class="menu-icon address-icon"></view>
+      <view class="menu-text">收货地址</view>
+      <view class="menu-arrow"></view>
+    </view>
+    <view class="menu-item" bindtap="contact">
+      <view class="menu-icon contact-icon"></view>
+      <view class="menu-text">联系客服</view>
+      <view class="menu-arrow"></view>
+    </view>
+    <view class="menu-item" bindtap="about">
+      <view class="menu-icon about-icon"></view>
+      <view class="menu-text">关于我们</view>
+      <view class="menu-arrow"></view>
+    </view>
+  </view>
+</view>
