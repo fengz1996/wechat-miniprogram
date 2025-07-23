@@ -18,14 +18,16 @@
       </view>
       
       <view class="address-actions">
-        <view class="action-btn set-default" bindtap="setDefault" data-id="{{item.id}}" wx:if="{{!item.isDefault}}">
+        <view class="action-btn set-default" catchtap="setDefault" data-id="{{item.id}}" wx:if="{{!item.isDefault}}">
           设为默认
         </view>
         <view class="action-btn edit" catchtap="editAddress" data-id="{{item.id}}">
           <view class="icon-edit"></view>
+          编辑
         </view>
         <view class="action-btn delete" catchtap="deleteAddress" data-id="{{item.id}}">
           <view class="icon-delete"></view>
+          删除
         </view>
       </view>
     </view>

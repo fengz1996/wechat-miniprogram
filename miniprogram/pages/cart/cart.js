@@ -370,9 +370,60 @@ Page({
 
   // 选择地址
   chooseAddress: function() {
-    wx.navigateTo({
-      url: '/pages/address/address?from=cart'
-    })
+    // 检查是否有地址列表
+    const addressList = wx.getStorageSync('addressList') || [];
+    if (addressList.length > 0) {
+      // 如果已经有地址，跳转到地址选择页面
+      wx.navigateTo({
+        url: '/pages/address/address?from=cart'
+      });
+    } else {
+      // 如果没有地址，直接调用微信地址API添加
+      wx.chooseAddress({
+        success: (res) => {
+          // 生成一个唯一ID
+          const addressId = 'addr_' + Date.now();
+          
+          // 构建地址对象
+          const address = {
+            id: addressId,
+            userName: res.userName,
+            telNumber: res.telNumber,
+            provinceName: res.provinceName,
+            cityName: res.cityName,
+            countyName: res.countyName,
+            detailInfo: res.detailInfo,
+            postalCode: res.postalCode,
+            isDefault: true
+          };
+          
+          // 添加到地址列表
+          const addressList = [address];
+          wx.setStorageSync('addressList', addressList);
+          
+          // 设置为默认地址
+          wx.setStorageSync('defaultAddress', address);
+          
+          // 更新当前页面的地址
+          this.setData({
+            address: address
+          });
+          
+          wx.showToast({
+            title: '添加成功',
+            icon: 'success'
+          });
+        },
+        fail: (err) => {
+          if (err.errMsg !== 'chooseAddress:fail cancel') {
+            wx.showToast({
+              title: '获取地址失败',
+              icon: 'none'
+            });
+          }
+        }
+      });
+    }
   },
   // 查看商品详情
   viewProduct: function(e) {
