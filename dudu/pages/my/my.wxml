@@ -1,0 +1,74 @@
+<view class="container">
+  <view class="user-header">
+    <view class="user-bg"></view>
+    <view class="user-info">
+      <view class="avatar-container" bindtap="getUserProfile">
+        <view class="avatar">
+          <view wx:if="{{!hasUserInfo}}" class="avatar-placeholder"></view>
+          <view wx:else class="avatar-text">{{userInfo.nickName[0]}}</view>
+        </view>
+      </view>
+      <view class="user-detail">
+        <view wx:if="{{!hasUserInfo}}" class="login-btn" bindtap="getUserProfile">点击登录</view>
+        <view wx:else class="username">{{userInfo.nickName}}</view>
+        <view wx:if="{{hasUserInfo}}" class="user-id">ID: XDD888888</view>
+      </view>
+    </view>
+  </view>
+  
+  <view class="wallet-card card">
+    <view class="wallet-header">
+      <view class="wallet-title">我的钱包</view>
+      <view class="wallet-action">明细</view>
+    </view>
+    <view class="wallet-content">
+      <view class="wallet-item">
+        <view class="wallet-value">¥ {{walletInfo.balance}}</view>
+        <view class="wallet-label">可提现金额</view>
+      </view>
+      <view class="wallet-divider"></view>
+      <view class="wallet-item">
+        <view class="wallet-value">{{walletInfo.points}}</view>
+        <view class="wallet-label">积分</view>
+      </view>
+    </view>
+  </view>
+  
+  <view class="team-card card">
+    <view class="team-header">
+      <view class="team-title">团队概览</view>
+      <view class="team-action">详情</view>
+    </view>
+    <view class="team-content">
+      <view class="team-item">
+        <view class="team-value">{{teamInfo.totalMembers}}</view>
+        <view class="team-label">总人数</view>
+      </view>
+      <view class="team-item">
+        <view class="team-value">{{teamInfo.directMembers}}</view>
+        <view class="team-label">直推人数</view>
+      </view>
+      <view class="team-item">
+        <view class="team-value">{{teamInfo.indirectMembers}}</view>
+        <view class="team-label">间推人数</view>
+      </view>
+    </view>
+  </view>
+  
+  <view class="menu-list">
+    <view 
+      wx:for="{{menuItems}}" 
+      wx:key="id" 
+      class="menu-item card" 
+      bindtap="navigateToMenuItem" 
+      data-id="{{item.id}}">
+      <view class="menu-icon {{item.icon}}"></view>
+      <view class="menu-name">{{item.name}}</view>
+      <view class="menu-arrow"></view>
+    </view>
+  </view>
+  
+  <view class="app-version">
+    <text>仙嘟嘟 v1.0.0</text>
+  </view>
+</view>

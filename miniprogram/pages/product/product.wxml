@@ -1,0 +1,96 @@
+<view class="container product-container">
+  <block wx:if="{{!loading && product}}">
+    <!-- 商品图片 -->
+    <view class="product-image-container">
+      <!-- 优先使用真实图片，如无则使用CSS样式 -->
+      <block wx:if="{{product.image}}">
+        <image class="product-main-img" src="{{product.image}}" mode="aspectFill"></image>
+      </block>
+      <block wx:else>
+        <view class="product-image-placeholder large {{product.imageClass}}"></view>
+      </block>
+      
+      <view class="product-badge badge-hot" wx:if="{{product.isHot}}">爆款</view>
+    </view>
+    
+    <!-- 商品信息 -->
+    <view class="product-info-card">
+      <view class="product-title">{{product.name}}</view>
+      
+      <view class="product-price-row">
+        <view class="product-price">{{product.price}}</view>
+        <view class="product-original-price" wx:if="{{product.originalPrice}}">¥{{product.originalPrice}}</view>
+      </view>
+      
+      <view class="product-meta">
+        <view class="meta-item">
+          <text class="meta-label">规格</text>
+          <text>{{product.weight}}{{product.unit}}</text>
+        </view>
+        <view class="meta-item">
+          <text class="meta-label">销量</text>
+          <text>{{product.sold}}份</text>
+        </view>
+        <view class="meta-item">
+          <text class="meta-label">库存</text>
+          <text>{{product.stock}}份</text>
+        </view>
+      </view>
+    </view>
+    
+    <!-- 商品详情 -->
+    <view class="product-detail-card">
+      <view class="section-title">商品详情</view>
+      <view class="product-description">{{product.description || '暂无详细介绍'}}</view>
+    </view>
+    
+    <!-- 相似商品推荐 -->
+    <view class="similar-products-card" wx:if="{{product.similarProducts && product.similarProducts.length > 0}}">
+      <view class="section-title">相似推荐</view>
+      <scroll-view scroll-x class="similar-scroll">
+        <view class="similar-products">
+          <view class="similar-product" wx:for="{{product.similarProducts}}" wx:key="id"
+                bindtap="viewSimilarProduct" data-id="{{item.id}}">
+            <view class="similar-image">
+              <!-- 优先使用真实图片，如无则使用CSS样式 -->
+              <block wx:if="{{item.image}}">
+                <image class="product-img" src="{{item.image}}" mode="aspectFill"></image>
+              </block>
+              <block wx:else>
+                <view class="product-image-placeholder {{item.imageClass}}"></view>
+              </block>
+            </view>
+            <view class="similar-name">{{item.name}}</view>
+            <view class="similar-price">¥{{item.price}}</view>
+          </view>
+        </view>
+      </scroll-view>
+    </view>
+    
+    <!-- 底部操作区 -->
+    <view class="action-bar">
+      <view class="quantity-control">
+        <view class="quantity-btn minus {{quantity <= 1 ? 'disabled' : ''}}" bindtap="decreaseQuantity">
+          <view class="icon-minus"></view>
+        </view>
+        <view class="quantity-display">{{quantity}}</view>
+        <view class="quantity-btn plus {{quantity >= product.stock ? 'disabled' : ''}}" bindtap="increaseQuantity">
+          <view class="icon-plus"></view>
+        </view>
+      </view>
+      
+      <view class="action-buttons">
+        <button class="action-btn cart-btn" bindtap="addToCart">加入购物车</button>
+        <button class="action-btn buy-btn" bindtap="buyNow">立即购买</button>
+      </view>
+    </view>
+  </block>
+  
+  <!-- 加载中 -->
+  <view class="loading-container" wx:if="{{loading}}">
+    <view class="loading-spinner"></view>
+  </view>
+  
+  <!-- 底部安全区域 -->
+  <view class="safe-area-bottom"></view>
+</view>

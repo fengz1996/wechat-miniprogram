@@ -1,187 +1,178 @@
+// pages/cart/cart.js
+const app = getApp()
+
 Page({
   data: {
     cartItems: [],
     totalPrice: 0,
-    deliveryFee: 0,
-    totalAmount: 0,
-    address: null,
-    remarks: ''
+    selectedCount: 0,
+    allSelected: false,
+    showEmpty: false
   },
 
-  onLoad: function (options) {
+  onLoad: function () {
     
   },
-
+  
   onShow: function () {
-    this.updateCart();
+    // 每次显示页面时更新购物车数据
+    this.loadCartData()
   },
-  
-  updateCart: function() {
-    const app = getApp();
-    const cartItems = app.globalData.cart;
-    let totalPrice = 0;
+
+  // 加载购物车数据
+  loadCartData: function() {
+    const cart = wx.getStorageSync('cart') || []
     
-    cartItems.forEach(item => {
-      totalPrice += item.price * item.quantity;
-    });
+    // 计算选中商品价格和数量
+    let totalPrice = 0
+    let selectedCount = 0
+    let allSelected = cart.length > 0
     
-    // 计算配送费，满68元免配送费，否则5元
-    const deliveryFee = totalPrice >= 68 ? 0 : 5;
-    const totalAmount = totalPrice + deliveryFee;
-    
-    this.setData({
-      cartItems,
-      totalPrice,
-      deliveryFee,
-      totalAmount
-    });
-  },
-  
-  increaseQuantity: function(e) {
-    const id = e.currentTarget.dataset.id;
-    const app = getApp();
-    const cartItems = app.globalData.cart;
-    
-    const index = cartItems.findIndex(item => item.id === id);
-    if (index > -1) {
-      cartItems[index].quantity += 1;
-      app.globalData.cart = cartItems;
-      this.updateCart();
-    }
-  },
-  
-  decreaseQuantity: function(e) {
-    const id = e.currentTarget.dataset.id;
-    const app = getApp();
-    const cartItems = app.globalData.cart;
-    
-    const index = cartItems.findIndex(item => item.id === id);
-    if (index > -1) {
-      if (cartItems[index].quantity > 1) {
-        cartItems[index].quantity -= 1;
+    cart.forEach(item => {
+      if (item.selected) {
+        totalPrice += item.price * item.quantity
+        selectedCount += item.quantity
       } else {
-        cartItems.splice(index, 1);
+        allSelected = false
       }
-      app.globalData.cart = cartItems;
-      this.updateCart();
-    }
-  },
-  
-  onQuantityInput: function(e) {
-    const id = e.currentTarget.dataset.id;
-    const quantity = parseInt(e.detail.value);
-    const app = getApp();
-    const cartItems = app.globalData.cart;
+    })
     
-    if (isNaN(quantity) || quantity < 1) return;
-    
-    const index = cartItems.findIndex(item => item.id === id);
-    if (index > -1) {
-      cartItems[index].quantity = quantity;
-      app.globalData.cart = cartItems;
-      this.updateCart();
-    }
-  },
-  
-  removeItem: function(e) {
-    const id = e.currentTarget.dataset.id;
-    const app = getApp();
-    const cartItems = app.globalData.cart;
-    
-    const index = cartItems.findIndex(item => item.id === id);
-    if (index > -1) {
-      cartItems.splice(index, 1);
-      app.globalData.cart = cartItems;
-      this.updateCart();
-    }
-  },
-  
-  clearCart: function() {
-    wx.showModal({
-      title: '提示',
-      content: '确定要清空购物车吗？',
-      success: (res) => {
-        if (res.confirm) {
-          const app = getApp();
-          app.globalData.cart = [];
-          this.updateCart();
-        }
-      }
-    });
-  },
-  
-  selectAddress: function() {
-    wx.chooseAddress({
-      success: (res) => {
-        this.setData({
-          address: {
-            name: res.userName,
-            phone: res.telNumber,
-            province: res.provinceName,
-            city: res.cityName,
-            district: res.countyName,
-            detail: res.detailInfo
-          }
-        });
-      }
-    });
-  },
-  
-  onRemarksInput: function(e) {
     this.setData({
-      remarks: e.detail.value
-    });
+      cartItems: cart,
+      totalPrice: totalPrice.toFixed(2),
+      selectedCount: selectedCount,
+      allSelected: allSelected,
+      showEmpty: cart.length === 0
+    })
   },
-  
-  navigateToMenu: function() {
+
+  // 商品数量增加
+  increaseQuantity: function(e) {
+    const index = e.currentTarget.dataset.index
+    const cart = this.data.cartItems
+    
+    cart[index].quantity += 1
+    
+    // 更新购物车
+    wx.setStorageSync('cart', cart)
+    this.updateCart(cart)
+  },
+
+  // 商品数量减少
+  decreaseQuantity: function(e) {
+    const index = e.currentTarget.dataset.index
+    const cart = this.data.cartItems
+    
+    if (cart[index].quantity > 1) {
+      cart[index].quantity -= 1
+      
+      // 更新购物车
+      wx.setStorageSync('cart', cart)
+      this.updateCart(cart)
+    }
+  },
+
+  // 删除商品
+  removeItem: function(e) {
+    const index = e.currentTarget.dataset.index
+    const cart = this.data.cartItems
+    
+    // 从购物车中移除商品
+    cart.splice(index, 1)
+    
+    // 更新购物车
+    wx.setStorageSync('cart', cart)
+    this.updateCart(cart)
+  },
+
+  // 切换商品选中状态
+  toggleItemSelect: function(e) {
+    const index = e.currentTarget.dataset.index
+    const cart = this.data.cartItems
+    
+    cart[index].selected = !cart[index].selected
+    
+    // 更新购物车
+    wx.setStorageSync('cart', cart)
+    this.updateCart(cart)
+  },
+
+  // 切换全选状态
+  toggleAllSelect: function() {
+    const cart = this.data.cartItems
+    const newState = !this.data.allSelected
+    
+    // 更新所有商品的选中状态
+    cart.forEach(item => {
+      item.selected = newState
+    })
+    
+    // 更新购物车
+    wx.setStorageSync('cart', cart)
+    this.updateCart(cart)
+  },
+
+  // 更新购物车数据和界面
+  updateCart: function(cart) {
+    // 计算选中商品价格和数量
+    let totalPrice = 0
+    let selectedCount = 0
+    let allSelected = cart.length > 0
+    
+    cart.forEach(item => {
+      if (item.selected) {
+        totalPrice += item.price * item.quantity
+        selectedCount += item.quantity
+      } else {
+        allSelected = false
+      }
+    })
+    
+    this.setData({
+      cartItems: cart,
+      totalPrice: totalPrice.toFixed(2),
+      selectedCount: selectedCount,
+      allSelected: allSelected,
+      showEmpty: cart.length === 0
+    })
+  },
+
+  // 结算
+  checkout: function() {
+    if (this.data.selectedCount === 0) {
+      wx.showToast({
+        title: '请选择商品',
+        icon: 'none'
+      })
+      return
+    }
+    
+    // 获取选中的商品
+    const selectedItems = this.data.cartItems.filter(item => item.selected)
+    
+    // 保存到全局变量，方便订单页面使用
+    app.globalData.checkoutItems = selectedItems
+    app.globalData.checkoutTotal = parseFloat(this.data.totalPrice)
+    
+    // 跳转到订单确认页面
+    wx.navigateTo({
+      url: '/pages/order/order'
+    })
+  },
+
+  // 继续购物
+  goShopping: function() {
     wx.switchTab({
-      url: '/pages/menu/menu'
-    });
+      url: '/pages/index/index'
+    })
   },
-  
-  placeOrder: function() {
-    if (this.data.cartItems.length === 0) {
-      wx.showToast({
-        title: '购物车为空',
-        icon: 'none'
-      });
-      return;
-    }
+
+  // 查看商品详情
+  viewProduct: function(e) {
+    const id = e.currentTarget.dataset.id
     
-    if (!this.data.address) {
-      wx.showToast({
-        title: '请选择收货地址',
-        icon: 'none'
-      });
-      return;
-    }
-    
-    // 这里应该调用云函数创建订单
-    // 由于支付接口需要单独申请和配置，我们先模拟下单成功
-    wx.showLoading({
-      title: '下单中...',
-    });
-    
-    setTimeout(() => {
-      wx.hideLoading();
-      
-      // 清空购物车
-      const app = getApp();
-      app.globalData.cart = [];
-      
-      wx.showToast({
-        title: '下单成功',
-        icon: 'success',
-        duration: 2000,
-        success: () => {
-          // 跳转到订单页
-          setTimeout(() => {
-            wx.switchTab({
-              url: '/pages/order/order'
-            });
-          }, 2000);
-        }
-      });
-    }, 1500);
+    wx.navigateTo({
+      url: `/pages/product/product?id=${id}`
+    })
   }
 })

@@ -1,0 +1,26 @@
+<!-- custom-tab-bar/index.wxml -->
+<view class="tab-bar">
+  <view class="tab-bar-border"></view>
+  <view 
+    wx:for="{{list}}" 
+    wx:key="index" 
+    class="tab-bar-item" 
+    data-path="{{item.pagePath}}"
+    data-index="{{index}}" 
+    bindtap="switchTab"
+  >
+    <view class="icon-wrapper">
+      <!-- 首页图标 -->
+      <view wx:if="{{index === 0}}" class="tab-icon {{selected === index ? 'icon-home-active' : 'icon-home'}}"></view>
+      <!-- 分类图标 -->
+      <view wx:if="{{index === 1}}" class="tab-icon {{selected === index ? 'icon-category-active' : 'icon-category'}}"></view>
+      <!-- 购物车图标 -->
+      <view wx:if="{{index === 2}}" class="tab-icon {{selected === index ? 'icon-cart-active' : 'icon-cart'}}">
+        <view class="tab-badge" wx:if="{{item.badge > 0}}">{{item.badge}}</view>
+      </view>
+      <!-- 我的图标 -->
+      <view wx:if="{{index === 3}}" class="tab-icon {{selected === index ? 'icon-user-active' : 'icon-user'}}"></view>
+    </view>
+    <view class="tab-text" style="color: {{selected === index ? selectedColor : color}}">{{item.text}}</view>
+  </view>
+</view>

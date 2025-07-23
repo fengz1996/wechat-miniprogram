@@ -1,0 +1,265 @@
+.tab-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 110rpx;
+  padding-bottom: env(safe-area-inset-bottom);
+  display: flex;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(15px);
+  box-shadow: 0 -8rpx 30rpx rgba(0, 0, 0, 0.06);
+  z-index: 999;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.tab-bar-border {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 1rpx;
+  background: linear-gradient(90deg, 
+    rgba(0, 0, 0, 0),
+    rgba(232, 108, 0, 0.1) 20%,
+    rgba(232, 108, 0, 0.2) 50%,
+    rgba(232, 108, 0, 0.1) 80%,
+    rgba(0, 0, 0, 0)
+  );
+}
+
+.tab-bar-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding-top: 16rpx;
+  transition: all 0.3s;
+}
+
+.tab-bar-item.active {
+  transform: translateY(-4rpx);
+}
+
+.tab-icon-wrapper {
+  position: relative;
+  width: 60rpx;
+  height: 60rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tab-icon {
+  width: 48rpx;
+  height: 48rpx;
+  position: relative;
+  transition: all 0.3s;
+}
+
+.tab-icon.selected {
+  transform: scale(1.1);
+}
+
+.tab-text {
+  font-size: 22rpx;
+  margin-top: 6rpx;
+  font-weight: 500;
+  transition: all 0.3s;
+}
+
+.tab-bar-item.active .tab-text {
+  transform: scale(1.1);
+}
+
+.tab-active-indicator {
+  position: absolute;
+  bottom: -10rpx;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 12rpx;
+  height: 12rpx;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #E86C00, #FF9F40);
+  box-shadow: 0 2rpx 8rpx rgba(232, 108, 0, 0.5);
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(232, 108, 0, 0.5);
+  }
+  70% {
+    box-shadow: 0 0 0 6rpx rgba(232, 108, 0, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(232, 108, 0, 0);
+  }
+}
+
+/* 首页图标 */
+.home-icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.home-roof {
+  width: 36rpx;
+  height: 24rpx;
+  background: transparent;
+  border-left: 18rpx solid transparent;
+  border-right: 18rpx solid transparent;
+  border-bottom: 18rpx solid currentColor;
+  margin-bottom: -2rpx;
+}
+
+.home-base {
+  width: 30rpx;
+  height: 20rpx;
+  background-color: currentColor;
+  border-radius: 4rpx 4rpx 0 0;
+}
+
+/* 分类图标 */
+.category-icon {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 4rpx;
+  width: 36rpx;
+  height: 36rpx;
+}
+
+.category-grid-1, .category-grid-2, .category-grid-3, .category-grid-4 {
+  width: 16rpx;
+  height: 16rpx;
+  border-radius: 4rpx;
+  background-color: currentColor;
+}
+
+/* 购物车图标 */
+.cart-icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 36rpx;
+  height: 36rpx;
+}
+
+.cart-body {
+  position: absolute;
+  top: 8rpx;
+  width: 28rpx;
+  height: 20rpx;
+  border: 2rpx solid currentColor;
+  border-radius: 2rpx 2rpx 6rpx 6rpx;
+  border-top: none;
+}
+
+.cart-handle {
+  position: absolute;
+  top: 0;
+  width: 16rpx;
+  height: 10rpx;
+  border: 2rpx solid currentColor;
+  border-bottom: none;
+  border-radius: 6rpx 6rpx 0 0;
+}
+
+.cart-wheel-left, .cart-wheel-right {
+  position: absolute;
+  bottom: 6rpx;
+  width: 6rpx;
+  height: 6rpx;
+  border-radius: 50%;
+  background-color: currentColor;
+}
+
+.cart-wheel-left {
+  left: 8rpx;
+}
+
+.cart-wheel-right {
+  right: 8rpx;
+}
+
+/* 用户图标 */
+.user-icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.user-head {
+  width: 16rpx;
+  height: 16rpx;
+  border-radius: 50%;
+  background-color: currentColor;
+  margin-bottom: 2rpx;
+}
+
+.user-body {
+  width: 24rpx;
+  height: 16rpx;
+  border-radius: 12rpx 12rpx 0 0;
+  background-color: currentColor;
+}
+
+/* 购物车徽章 */
+.tab-badge {
+  position: absolute;
+  top: -8rpx;
+  right: -8rpx;
+  min-width: 32rpx;
+  height: 32rpx;
+  border-radius: 16rpx;
+  background: linear-gradient(135deg, #E53935, #FF5252);
+  color: white;
+  font-size: 20rpx;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 6rpx;
+  box-sizing: border-box;
+  box-shadow: 0 2rpx 6rpx rgba(229, 57, 53, 0.3);
+  border: 1px solid white;
+  transform: scale(0.8);
+}
+
+/* 色彩定义 */
+.home-icon {
+  color: #757575;
+}
+
+.home-icon.selected {
+  color: #E86C00;
+}
+
+.category-icon {
+  color: #757575;
+}
+
+.category-icon.selected {
+  color: #E86C00;
+}
+
+.cart-icon {
+  color: #757575;
+}
+
+.cart-icon.selected {
+  color: #E86C00;
+}
+
+.user-icon {
+  color: #757575;
+}
+
+.user-icon.selected {
+  color: #E86C00;
+}

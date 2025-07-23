@@ -1,0 +1,227 @@
+page {
+  --primary-color: #FFD700;
+  --secondary-color: #F2A900;
+  --text-color: #333333;
+  --light-text: #666666;
+  --background-color: #F8F8F8;
+  --white: #FFFFFF;
+  --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --border-radius: 12px;
+  --transition: all 0.3s ease;
+  
+  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, 
+               Segoe UI, Arial, Roboto, 'PingFang SC', 'miui', 'Hiragino Sans GB', 
+               'Microsoft Yahei', sans-serif;
+  color: var(--text-color);
+  font-size: 14px;
+  background-color: var(--background-color);
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  min-height: 100vh;
+}
+
+.flex {
+  display: flex;
+}
+
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.card {
+  background-color: var(--white);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+  padding: 16px;
+  margin: 10px;
+  transition: var(--transition);
+}
+
+.card:active {
+  transform: scale(0.98);
+}
+
+.btn {
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+  color: var(--white);
+  font-weight: bold;
+  border-radius: 50px;
+  padding: 10px 24px;
+  box-shadow: 0 4px 8px rgba(242, 169, 0, 0.3);
+  transition: var(--transition);
+}
+
+.btn:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 4px rgba(242, 169, 0, 0.3);
+}
+
+.title {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 12px;
+}
+
+.subtitle {
+  font-size: 16px;
+  color: var(--light-text);
+  margin-bottom: 8px;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.egg-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #FFF0BA 0%, #FFDB58 100%);
+  box-shadow: inset 2px 2px 4px rgba(255, 255, 255, 0.5),
+              inset -2px -2px 4px rgba(0, 0, 0, 0.05);
+  position: relative;
+}
+
+.egg-icon::before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  left: 20px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.8);
+}
+
+.tabbar-icon {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.home-icon::before {
+  content: '';
+  display: block;
+  width: 16px;
+  height: 16px;
+  border-radius: 3px;
+  border: 2px solid currentColor;
+  border-top: none;
+  position: relative;
+}
+
+.home-icon::after {
+  content: '';
+  display: block;
+  position: absolute;
+  width: 14px;
+  height: 10px;
+  background: transparent;
+  border-top: 2px solid currentColor;
+  border-left: 2px solid transparent;
+  border-right: 2px solid transparent;
+  transform: translateY(-12px);
+}
+
+.cooperation-icon::before {
+  content: '';
+  display: block;
+  width: 10px;
+  height: 16px;
+  border: 2px solid currentColor;
+  border-radius: 3px;
+}
+
+.cooperation-icon::after {
+  content: '';
+  display: block;
+  position: absolute;
+  width: 6px;
+  height: 2px;
+  background: currentColor;
+  border-radius: 1px;
+  transform: translate(4px, -10px);
+}
+
+.scan-icon {
+  position: relative;
+  width: 18px;
+  height: 18px;
+  border: 2px solid currentColor;
+}
+
+.scan-icon::before, .scan-icon::after {
+  content: '';
+  position: absolute;
+  left: 5px;
+  width: 8px;
+  height: 2px;
+  background-color: currentColor;
+}
+
+.scan-icon::before {
+  top: 5px;
+}
+
+.scan-icon::after {
+  bottom: 5px;
+}
+
+.mall-icon::before {
+  content: '';
+  display: block;
+  width: 16px;
+  height: 12px;
+  border: 2px solid currentColor;
+  border-radius: 2px;
+}
+
+.mall-icon::after {
+  content: '';
+  display: block;
+  position: absolute;
+  width: 10px;
+  height: 4px;
+  border: 2px solid currentColor;
+  border-radius: 4px 4px 0 0;
+  border-bottom: none;
+  transform: translate(3px, -14px);
+}
+
+.mine-icon {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid currentColor;
+}
+
+.mine-icon::after {
+  content: '';
+  display: block;
+  position: absolute;
+  width: 20px;
+  height: 10px;
+  border-radius: 10px 10px 0 0;
+  border: 2px solid currentColor;
+  border-bottom: none;
+  transform: translate(-2px, 16px);
+}

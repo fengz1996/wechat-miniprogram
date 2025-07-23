@@ -1,77 +1,77 @@
 <view class="container">
-  <view wx:if="{{cartItems.length === 0}}" class="empty-cart">
-    <image src="../../images/empty-cart.png" mode="aspectFit" class="empty-cart-image"></image>
-    <view class="empty-cart-text">购物车空空如也，快去选购吧~</view>
-    <button class="go-shopping-btn" bindtap="navigateToMenu">去购物</button>
-  </view>
-  
-  <block wx:else>
-    <view class="cart-header">
-      <view class="cart-title">已选商品</view>
-      <view class="clear-cart" bindtap="clearCart">清空购物车</view>
-    </view>
-    
-    <view class="cart-items">
+  <block wx:if="{{!showEmpty}}">
+    <!-- 购物车列表 -->
+    <view class="cart-list">
       <view class="cart-item" wx:for="{{cartItems}}" wx:key="id">
-        <image class="cart-item-image" src="{{item.imageUrl}}" mode="aspectFill"></image>
-        <view class="cart-item-info">
-          <view class="cart-item-name">{{item.name}}</view>
-          <view class="cart-item-weight">{{item.weight}}</view>
-          <view class="cart-item-bottom">
-            <view class="cart-item-price">¥{{item.price}}</view>
-            <view class="quantity-control">
-              <view class="minus-btn" bindtap="decreaseQuantity" data-id="{{item.id}}">-</view>
-              <input class="quantity-input" type="number" value="{{item.quantity}}" bindinput="onQuantityInput" data-id="{{item.id}}"/>
-              <view class="add-btn" bindtap="increaseQuantity" data-id="{{item.id}}">+</view>
+        <view class="select-checkbox" bindtap="toggleItemSelect" data-index="{{index}}">
+          <view class="checkbox {{item.selected ? 'checked' : ''}}"></view>
+        </view>
+        
+        <view class="item-content" bindtap="viewProduct" data-id="{{item.id}}">
+          <view class="item-image">
+            <!-- 优先使用真实图片，如无则使用CSS样式 -->
+            <block wx:if="{{item.image}}">
+              <image class="product-img" src="{{item.image}}" mode="aspectFill"></image>
+            </block>
+            <block wx:else>
+              <view class="product-image-placeholder {{item.imageClass}}"></view>
+            </block>
+          </view>
+          
+          <view class="item-info">
+            <view class="item-name">{{item.name}}</view>
+            
+            <view class="item-bottom">
+              <view class="item-price">{{item.price}}</view>
+              
+              <view class="quantity-control">
+                <view class="quantity-btn minus {{item.quantity <= 1 ? 'disabled' : ''}}" 
+                      catchtap="decreaseQuantity" data-index="{{index}}">
+                  <view class="icon-minus"></view>
+                </view>
+                <view class="quantity-display">{{item.quantity}}</view>
+                <view class="quantity-btn plus" catchtap="increaseQuantity" data-index="{{index}}">
+                  <view class="icon-plus"></view>
+                </view>
+              </view>
             </view>
           </view>
         </view>
-        <view class="delete-btn" bindtap="removeItem" data-id="{{item.id}}">×</view>
-      </view>
-    </view>
-    
-    <view class="delivery-address" bindtap="selectAddress">
-      <view class="address-icon"></view>
-      <view class="address-content">
-        <view wx:if="{{!address}}" class="no-address">请选择收货地址</view>
-        <view wx:else class="address-info">
-          <view class="address-top">
-            <text class="address-name">{{address.name}}</text>
-            <text class="address-phone">{{address.phone}}</text>
-          </view>
-          <view class="address-detail">{{address.province}}{{address.city}}{{address.district}}{{address.detail}}</view>
+        
+        <view class="delete-btn" catchtap="removeItem" data-index="{{index}}">
+          <view class="icon-delete"></view>
         </view>
       </view>
-      <view class="address-arrow"></view>
     </view>
     
-    <view class="order-summary">
-      <view class="summary-item">
-        <text>商品金额</text>
-        <text>¥{{totalPrice}}</text>
+    <!-- 底部结算栏 -->
+    <view class="cart-footer">
+      <view class="select-all" bindtap="toggleAllSelect">
+        <view class="checkbox {{allSelected ? 'checked' : ''}}"></view>
+        <text>全选</text>
       </view>
-      <view class="summary-item">
-        <text>配送费</text>
-        <text>¥{{deliveryFee}}</text>
-      </view>
-      <view class="summary-divider"></view>
-      <view class="summary-total">
-        <text>合计</text>
-        <text class="total-amount">¥{{totalAmount}}</text>
-      </view>
-    </view>
-    
-    <view class="remarks">
-      <view class="remarks-title">订单备注：</view>
-      <textarea class="remarks-input" placeholder="请输入备注信息（选填）" value="{{remarks}}" bindinput="onRemarksInput" maxlength="50"></textarea>
-    </view>
-    
-    <view class="checkout-bar">
+      
       <view class="total-info">
         <text>合计：</text>
-        <text class="total-price">¥{{totalAmount}}</text>
+        <text class="total-price">¥{{totalPrice}}</text>
       </view>
-      <button class="checkout-btn" bindtap="placeOrder">提交订单</button>
+      
+      <view class="checkout-btn {{selectedCount === 0 ? 'disabled' : ''}}" bindtap="checkout">
+        结算 ({{selectedCount}})
+      </view>
     </view>
   </block>
+  
+  <!-- 空购物车状态 -->
+  <view class="empty-cart" wx:if="{{showEmpty}}">
+    <view class="empty-icon">
+      <view class="icon-empty-cart"></view>
+    </view>
+    <view class="empty-text">购物车空空如也~</view>
+    <view class="empty-subtext">去添加一些美食吧</view>
+    <button class="btn-go-shopping" bindtap="goShopping">去购物</button>
+  </view>
+  
+  <!-- 底部安全区域 -->
+  <view class="safe-area-bottom"></view>
 </view>

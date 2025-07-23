@@ -1,0 +1,82 @@
+<view class="container">
+  <!-- 分类导航 -->
+  <view class="category-nav">
+    <scroll-view scroll-x class="category-scroll" enhanced show-scrollbar="false">
+      <view class="category-item {{currentCategoryId === 0 ? 'active' : ''}}" 
+            bindtap="switchCategory" data-id="0">
+        全部
+      </view>
+      <view class="category-item {{currentCategoryId === item.id ? 'active' : ''}}" 
+            wx:for="{{categories}}" wx:key="id"
+            bindtap="switchCategory" data-id="{{item.id}}">
+        {{item.name}}
+      </view>
+    </scroll-view>
+  </view>
+  
+  <!-- 筛选条件 -->
+  <view class="filter-bar">
+    <view class="filter-item {{isHotFilterActive ? 'active' : ''}}" bindtap="toggleHotFilter">
+      <text>爆款</text>
+      <view class="filter-indicator"></view>
+    </view>
+    <view class="filter-item {{isNewFilterActive ? 'active' : ''}}" bindtap="toggleNewFilter">
+      <text>新品</text>
+      <view class="filter-indicator"></view>
+    </view>
+  </view>
+  
+  <!-- 加载中 -->
+  <view class="loading-container" wx:if="{{loading}}">
+    <view class="loading-spinner"></view>
+  </view>
+  
+  <!-- 商品列表 -->
+  <view class="products-grid" wx:else>
+    <block wx:if="{{products.length > 0}}">
+      <view class="product-card" wx:for="{{products}}" wx:key="id" 
+            bindtap="viewProduct" data-id="{{item.id}}">
+        <view class="product-badge badge-hot" wx:if="{{item.isHot}}">爆款</view>
+        <view class="product-image">
+          <!-- 优先使用真实图片，如无则使用CSS样式 -->
+          <block wx:if="{{item.image}}">
+            <image class="product-img" src="{{item.image}}" mode="aspectFill"></image>
+          </block>
+          <block wx:else>
+            <view class="product-image-placeholder {{item.imageClass}}"></view>
+          </block>
+        </view>
+        <view class="product-info">
+          <view class="product-name">{{item.name}}</view>
+          <view class="product-meta">
+            <view class="product-price">{{item.price}}</view>
+            <view class="product-sold">已售{{item.sold}}份</view>
+          </view>
+          <view class="product-actions">
+            <button class="add-cart-btn" catchtap="addToCart" data-id="{{item.id}}">
+              <view class="icon-cart"></view>
+              <text>加入购物车</text>
+            </button>
+          </view>
+        </view>
+      </view>
+    </block>
+    
+    <!-- 空状态 -->
+    <view class="empty-state" wx:else>
+      <view class="empty-icon">
+        <view class="icon-empty-product"></view>
+      </view>
+      <view class="empty-text">暂无商品</view>
+    </view>
+  </view>
+  
+  <!-- 加载更多 -->
+  <view class="loading-more" wx:if="{{loadingMore}}">
+    <view class="loading-spinner small"></view>
+    <text>加载更多...</text>
+  </view>
+  
+  <!-- 底部安全区域 -->
+  <view class="safe-area-bottom"></view>
+</view>

@@ -1,0 +1,55 @@
+<view class="container">
+  <view class="wallet-header">
+    <view class="balance-section">
+      <view class="balance-title">可提现余额</view>
+      <view class="balance-value">¥ {{balance}}</view>
+      <view class="withdraw-btn" bindtap="showWithdrawModal">立即提现</view>
+    </view>
+  </view>
+  
+  <view class="tabs">
+    <view class="tab {{activeTab === 'transactions' ? 'active' : ''}}" bindtap="changeTab" data-tab="transactions">
+      余额明细
+    </view>
+    <view class="tab {{activeTab === 'commissions' ? 'active' : ''}}" bindtap="changeTab" data-tab="commissions">
+      佣金明细
+    </view>
+  </view>
+  
+  <view class="tab-content">
+    <block wx:if="{{activeTab === 'transactions'}}">
+      <view class="transaction-list">
+        <block wx:if="{{transactions.length > 0}}">
+          <view class="transaction-item" wx:for="{{transactions}}" wx:key="id">
+            <view class="transaction-info">
+              <view class="transaction-type">{{getTransactionTypeName(item.type)}}</view>
+              <view class="transaction-time">{{item.created_at}}</view>
+            </view>
+            <view class="transaction-amount {{item.amount >= 0 ? 'income' : 'expense'}}">
+              {{item.amount >= 0 ? '+' : ''}}{{item.amount}}
+            </view>
+          </view>
+        </block>
+        <view wx:else class="empty-tip">暂无交易记录</view>
+      </view>
+    </block>
+    
+    <block wx:else>
+      <view class="commission-list">
+        <block wx:if="{{commissions.length > 0}}">
+          <view class="commission-item" wx:for="{{commissions}}" wx:key="id">
+            <view class="commission-info">
+              <view class="commission-type">{{getCommissionTypeName(item.type)}}</view>
+              <view class="commission-time">{{item.created_at}}</view>
+            </view>
+            <view class="commission-content">
+              <view class="commission-amount">+{{item.amount}}元</view>
+              <view class="commission-points" wx:if="{{item.points > 0}}">+{{item.points}}积分</view>
+            </view>
+          </view>
+        </block>
+        <view wx:else class="empty-tip">暂无佣金记录</view>
+      </view>
+    </block>
+  </view>
+</view>

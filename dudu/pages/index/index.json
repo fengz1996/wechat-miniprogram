@@ -1,0 +1,8 @@
+{
+  "navigationBarTitleText": "仙嘟嘟",
+  "navigationBarBackgroundColor": "#FF7B3B",
+  "navigationBarTextStyle": "white",
+  "enablePullDownRefresh": true,
+  "backgroundColor": "#F8F8F8",
+  "usingComponents": {}
+}

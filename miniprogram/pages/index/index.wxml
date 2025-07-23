@@ -1,57 +1,293 @@
-<view class="container">
-  <view class="banner">
-    <swiper indicator-dots autoplay circular interval="3000" duration="500">
-      <swiper-item wx:for="{{banners}}" wx:key="id">
-        <image src="{{item.imageUrl}}" mode="aspectFill" class="banner-image" />
-      </swiper-item>
+<!-- index.wxml -->
+<view class="index-container">
+  <!-- 顶部导航栏 -->
+  <view class="nav-bar" style="height: {{navHeight}}px">
+    <view class="status-bar" style="height: {{statusBarHeight}}px"></view>
+    <view class="nav-content">
+      <view class="logo-container">
+        <view class="logo-inner">
+          <view class="logo-text">巴巴美食</view>
+          <view class="logo-highlight"></view>
+        </view>
+      </view>
+      <view class="search-bar">
+        <view class="search-icon-wrapper">
+          <text class="icon icon-search"></text>
+        </view>
+        <input placeholder="搜索美食" bindtap="onSearchTap" disabled />
+        <view class="search-light"></view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 页面内容 -->
+  <scroll-view 
+    scroll-y 
+    class="content" 
+    style="padding-top: {{navHeight}}px" 
+    enhanced="true" 
+    show-scrollbar="{{false}}" 
+    bounces="{{true}}"
+    scroll-with-animation="true"
+  >
+    <!-- 轮播图 -->
+    <swiper 
+      class="banner-swiper" 
+      indicator-dots="{{true}}" 
+      autoplay="{{true}}" 
+      circular="{{true}}" 
+      interval="4000"
+      duration="500"
+      indicator-active-color="#E86C00" 
+      indicator-color="rgba(255,255,255,0.4)"
+      previous-margin="30rpx"
+      next-margin="30rpx"
+      bindchange="onSwiperChange"
+    >
+      <block wx:for="{{banners}}" wx:key="id">
+        <swiper-item>
+          <view class="banner-item {{currentSwiper === index ? 'active' : ''}}" data-link="{{item.link}}" bindtap="onBannerTap">
+            <view class="banner-card-3d">
+              <view class="banner-gradient" style="background: linear-gradient(135deg, {{item.gradientStart || '#E86C00'}}, {{item.gradientEnd || '#DD4D1C'}})">
+                <view class="banner-texture"></view>
+                <text class="banner-icon {{item.iconClass || 'icon-food'}}"></text>
+              </view>
+              <view class="banner-content">
+                <view class="banner-title">{{item.title}}</view>
+                <view class="banner-desc">{{item.description}}</view>
+                <view class="banner-btn">立即查看 <text class="icon-arrow-right"></text></view>
+              </view>
+              <image wx:if="{{item.image}}" class="banner-image" src="{{item.image}}" mode="aspectFill" lazy-load></image>
+              <view class="banner-overlay"></view>
+              <view class="banner-shine"></view>
+            </view>
+          </view>
+        </swiper-item>
+      </block>
     </swiper>
-  </view>
 
-  <view class="announcement">
-    <view class="announcement-icon">
-      <image src="../../images/announcement.png" mode="aspectFit"></image>
+    <!-- 商家公告 -->
+    <view class="notice-card">
+      <view class="notice-left">
+        <view class="notice-icon-3d">
+          <view class="notice-icon-face front">
+            <text class="icon icon-notice"></text>
+          </view>
+          <view class="notice-icon-face back">
+            <text class="icon icon-notice"></text>
+          </view>
+          <view class="notice-icon-face left"></view>
+          <view class="notice-icon-face right"></view>
+          <view class="notice-icon-face top"></view>
+          <view class="notice-icon-face bottom"></view>
+        </view>
+      </view>
+      <view class="notice-content">
+        <swiper class="notice-swiper" vertical="{{true}}" autoplay="{{true}}" circular="{{true}}" interval="3000" duration="400">
+          <swiper-item>
+            <view class="notice-item">
+              <view class="notice-text">{{notice}}</view>
+              <view class="notice-blink"></view>
+            </view>
+          </swiper-item>
+          <swiper-item>
+            <view class="notice-item">
+              <view class="notice-text">营业时间: {{businessHours}}</view>
+              <view class="notice-blink"></view>
+            </view>
+          </swiper-item>
+        </swiper>
+      </view>
+      <view class="notice-ripple"></view>
     </view>
-    <view class="announcement-text">
-      <text>营业时间: 9:00-24:00 | 满68元城区花园内免费配送</text>
-    </view>
-  </view>
 
-  <view class="section">
-    <view class="section-title">热门推荐</view>
-    <view class="hot-dishes">
-      <view class="dish-card" wx:for="{{hotDishes}}" wx:key="id" bindtap="navigateToDish" data-id="{{item.id}}">
-        <image src="{{item.imageUrl}}" mode="aspectFill" class="dish-image"></image>
-        <view class="dish-info">
-          <view class="dish-name">{{item.name}}</view>
-          <view class="dish-price-row">
-            <text class="dish-price">¥{{item.price}}</text>
-            <view class="add-btn" catchtap="addToCart" data-item="{{item}}">+</view>
+    <!-- 分类导航 -->
+    <view class="category-section">
+      <view class="section-title-3d">
+        <view class="title-front">
+          <text>美食分类</text>
+          <view class="title-decoration"></view>
+        </view>
+        <view class="title-shadow"></view>
+      </view>
+      
+      <view class="category-grid">
+        <block wx:for="{{categories}}" wx:key="id">
+          <view class="category-item-3d" data-id="{{item.id}}" bindtap="navigateToCategory" style="--index:{{index}}">
+            <view class="category-inner">
+              <view class="category-face front">
+                <view class="category-icon-wrapper">
+                  <view class="category-icon-3d">
+                    <text class="category-icon {{item.iconClass || getCategoryIcon(item.name)}}"></text>
+                    <view class="category-icon-shadow"></view>
+                  </view>
+                </view>
+                <view class="category-name">{{item.name}}</view>
+              </view>
+              <view class="category-face back">
+                <view class="category-back-text">查看全部</view>
+              </view>
+              <view class="category-face left"></view>
+              <view class="category-face right"></view>
+              <view class="category-face top"></view>
+              <view class="category-face bottom"></view>
+            </view>
+            <view class="category-item-shadow"></view>
+          </view>
+        </block>
+      </view>
+    </view>
+
+    <!-- 爆款推荐 -->
+    <view class="hot-section" id="hot-section">
+      <view class="section-title-3d">
+        <view class="title-front">
+          <text>爆款推荐</text>
+          <text class="icon icon-fire"></text>
+          <view class="title-decoration"></view>
+        </view>
+        <view class="title-shadow"></view>
+      </view>
+      
+      <view class="hot-scroll-container">
+        <scroll-view 
+          scroll-x="{{true}}" 
+          class="hot-scroll" 
+          enhanced="true" 
+          show-scrollbar="{{false}}"
+          bindscroll="onHotScroll"
+        >
+          <view class="hot-list">
+            <block wx:for="{{hotProducts}}" wx:key="id">
+              <view class="hot-item-wrapper" style="--index:{{index}}">
+                <view class="hot-item" data-id="{{item.id}}" bindtap="navigateToProduct">
+                  <view class="hot-card-3d">
+                    <view class="hot-image-container">
+                      <image wx:if="{{item.image}}" class="hot-image" src="{{item.image}}" mode="aspectFill" lazy-load></image>
+                      <view class="hot-image-shine"></view>
+                      <view class="hot-badge">
+                        <view class="hot-badge-text">爆款</view>
+                        <view class="hot-badge-glow"></view>
+                      </view>
+                    </view>
+                    <view class="hot-info">
+                      <view class="hot-name-container">
+                        <view class="hot-name text-ellipsis">{{item.name}}</view>
+                        <view class="hot-name-decoration"></view>
+                      </view>
+                      <view class="hot-price-row">
+                        <view class="price">
+                          <text class="price-symbol">¥</text>
+                          <text class="price-integer">{{Math.floor(item.price)}}</text>
+                          <text class="price-decimal">.{{(item.price * 100) % 100 < 10 ? '0' + (item.price * 100) % 100 : (item.price * 100) % 100}}</text>
+                        </view>
+                        <view class="original-price" wx:if="{{item.original_price}}">¥{{item.original_price}}</view>
+                      </view>
+                      <view class="hot-meta">
+                        <text class="hot-weight">{{item.weight}}{{item.unit}}</text>
+                        <text class="hot-sold">已售{{item.sold}}份</text>
+                      </view>
+                      <view class="hot-add-container">
+                        <view class="add-btn-3d" catchtap="addToCart" data-product="{{item}}">
+                          <view class="add-btn-face front">
+                            <text class="icon icon-add"></text>
+                          </view>
+                          <view class="add-btn-face back">
+                            <text class="icon icon-add"></text>
+                          </view>
+                          <view class="add-btn-face left"></view>
+                          <view class="add-btn-face right"></view>
+                          <view class="add-btn-face top"></view>
+                          <view class="add-btn-face bottom"></view>
+                          <view class="add-btn-shadow"></view>
+                        </view>
+                      </view>
+                    </view>
+                    <view class="hot-card-reflection"></view>
+                  </view>
+                </view>
+              </view>
+            </block>
+          </view>
+        </scroll-view>
+        <view class="hot-scroll-indicator">
+          <view class="indicator-track">
+            <view class="indicator-thumb" style="width: {{hotScrollIndicatorWidth}}px; left: {{hotScrollIndicatorLeft}}px"></view>
           </view>
         </view>
       </view>
     </view>
-  </view>
 
-  <view class="section">
-    <view class="section-title">菜品分类</view>
-    <view class="categories">
-      <view class="category-item" wx:for="{{categories}}" wx:key="id" bindtap="navigateToMenu" data-category="{{item.id}}">
-        <image src="{{item.imageUrl}}" mode="aspectFill" class="category-image"></image>
-        <text class="category-name">{{item.name}}</text>
+    <!-- 新品上市 -->
+    <view class="new-section">
+      <view class="section-title-3d">
+        <view class="title-front">
+          <text>新品上市</text>
+          <text class="icon icon-new"></text>
+          <view class="title-decoration"></view>
+        </view>
+        <view class="title-shadow"></view>
+      </view>
+      
+      <view class="new-grid">
+        <block wx:for="{{newProducts}}" wx:key="id">
+          <view class="new-item-wrapper" style="--index:{{index}}">
+            <view class="new-item" data-id="{{item.id}}" bindtap="navigateToProduct">
+              <view class="new-card-3d">
+                <view class="new-image-container">
+                  <image wx:if="{{item.image}}" class="new-image" src="{{item.image}}" mode="aspectFill" lazy-load></image>
+                  <view class="new-image-overlay"></view>
+                  <view class="new-tag">
+                    <view class="new-tag-text">新品</view>
+                    <view class="new-tag-shine"></view>
+                  </view>
+                </view>
+                <view class="new-info">
+                  <view class="new-name-container">
+                    <view class="new-name text-ellipsis">{{item.name}}</view>
+                  </view>
+                  <view class="new-meta">
+                    <view class="price">
+                      <text class="price-symbol">¥</text>
+                      <text class="price-integer">{{Math.floor(item.price)}}</text>
+                      <text class="price-decimal">.{{(item.price * 100) % 100 < 10 ? '0' + (item.price * 100) % 100 : (item.price * 100) % 100}}</text>
+                    </view>
+                    <view class="add-btn-sm-3d" catchtap="addToCart" data-product="{{item}}">
+                      <view class="add-btn-sm-inner">
+                        <text class="icon icon-add"></text>
+                      </view>
+                      <view class="add-btn-sm-shadow"></view>
+                    </view>
+                  </view>
+                </view>
+                <view class="new-card-glow"></view>
+              </view>
+            </view>
+          </view>
+        </block>
       </view>
     </view>
-  </view>
 
-  <view class="contact-section">
-    <view class="contact-title">商家信息</view>
-    <view class="contact-info">
-      <view class="contact-item">
-        <text class="location-icon"></text>
-        <text>巴巴美食 (花园店)</text>
+    <!-- 底部安全区域 -->
+    <view class="safe-area"></view>
+  </scroll-view>
+
+  <!-- 购物车悬浮按钮 -->
+  <view class="cart-float-container">
+    <view class="cart-float-3d" bindtap="navigateToCart">
+      <view class="cart-float-inner">
+        <view class="cart-icon-wrapper">
+          <text class="icon icon-cart"></text>
+        </view>
+        <view class="cart-count" wx:if="{{cartCount > 0}}">
+          <text>{{cartCount}}</text>
+          <view class="cart-count-pulse"></view>
+        </view>
       </view>
-      <view class="contact-item">
-        <text class="phone-icon"></text>
-        <text>联系电话: 123-4567-8910</text>
+      <view class="cart-float-shadow"></view>
+      <view class="cart-float-ring"></view>
+      <view class="cart-float-particles">
+        <view class="particle" wx:for="{{12}}" wx:key="index" style="--i:{{index}}"></view>
       </view>
     </view>
   </view>

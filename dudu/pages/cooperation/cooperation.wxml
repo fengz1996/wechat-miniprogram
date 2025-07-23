@@ -1,0 +1,71 @@
+<view class="container">
+  <view class="cooperation-header">
+    <view class="header-bg"></view>
+    <view class="header-content">
+      <view class="header-title">{{cooperationInfo.title}}</view>
+      <view class="header-desc">{{cooperationInfo.desc}}</view>
+    </view>
+  </view>
+  
+  <view class="advantages section">
+    <view class="section-title">合作优势</view>
+    <view class="advantages-list">
+      <view wx:for="{{cooperationInfo.advantages}}" wx:key="index" class="advantage-item card">
+        <view class="advantage-icon advantage-icon-{{index}}"></view>
+        <view class="advantage-content">
+          <view class="advantage-title">{{item.title}}</view>
+          <view class="advantage-desc">{{item.desc}}</view>
+        </view>
+      </view>
+    </view>
+  </view>
+  
+  <view class="levels section">
+    <view class="section-title">合作等级</view>
+    <view class="levels-list">
+      <view wx:for="{{cooperationInfo.levels}}" wx:key="index" class="level-item card level-{{index}}">
+        <view class="level-header">
+          <view class="level-badge">{{index + 1}}</view>
+          <view class="level-name">{{item.name}}</view>
+        </view>
+        <view class="level-content">
+          <view class="level-row">
+            <view class="level-label">投资金额</view>
+            <view class="level-value">{{item.investment}}</view>
+          </view>
+          <view class="level-row">
+            <view class="level-label">收益回报</view>
+            <view class="level-value">{{item.profit}}</view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+  
+  <view class="extra-profits section card">
+    <view class="title">{{cooperationInfo.extra.title}}</view>
+    <view class="extra-list">
+      <view wx:for="{{cooperationInfo.extra.items}}" wx:key="index" class="extra-item">
+        <view class="extra-icon"></view>
+        <text>{{item}}</text>
+      </view>
+    </view>
+  </view>
+  
+  <view class="contact section card">
+    <view class="contact-title">联系方式</view>
+    <view class="contact-item">
+      <view class="contact-icon contact-phone"></view>
+      <text>{{cooperationInfo.contact.tel}}</text>
+      <view class="contact-btn" bindtap="callCooperation">立即咨询</view>
+    </view>
+    <view class="contact-item">
+      <view class="contact-icon contact-address"></view>
+      <text>{{cooperationInfo.contact.address}}</text>
+    </view>
+  </view>
+  
+  <view class="join-button" bindtap="joinNow">
+    立即申请合作
+  </view>
+</view>

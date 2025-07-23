@@ -1,0 +1,75 @@
+<view class="container">
+  <block wx:if="{{!scanSuccess}}">
+    <view class="scan-placeholder">
+      <view class="scan-icon-large"></view>
+      <view class="scan-title">扫码购买</view>
+      <view class="scan-desc">请扫描设备上的二维码</view>
+      <view class="scan-btn" bindtap="scanCode">点击扫码</view>
+      
+      <!-- 模拟设备选择区域（开发用） -->
+      <view class="mock-devices">
+        <view class="mock-title">模拟设备（开发用）</view>
+        <view class="mock-device-list">
+          <view class="mock-device" bindtap="mockScan" data-code="DEVICE001">测试设备1</view>
+          <view class="mock-device" bindtap="mockScan" data-code="DEVICE002">测试设备2</view>
+        </view>
+      </view>
+    </view>
+  </block>
+  
+  <block wx:else>
+    <view class="device-info card">
+      <view class="device-header">
+        <view class="device-icon"></view>
+        <view class="device-detail">
+          <view class="device-name">{{deviceInfo.name}}</view>
+          <view class="device-id">设备ID: {{deviceInfo.device_code}}</view>
+        </view>
+        <view class="device-status">{{deviceInfo.status == 1 ? '正常运行' : '维护中'}}</view>
+      </view>
+      <view class="device-location">
+        <view class="location-icon"></view>
+        <text>{{deviceInfo.location || '未知位置'}}</text>
+      </view>
+    </view>
+    
+    <view class="product-section card">
+      <view class="section-title">选择规格</view>
+      <view class="spec-list">
+        <block wx:for="{{products}}" wx:key="id">
+          <view class="spec-item {{item.selected ? 'selected' : ''}}" bindtap="selectProduct" data-index="{{index}}">
+            <view class="spec-name">{{item.name}}</view>
+            <view class="spec-price">¥{{item.price}}</view>
+          </view>
+        </block>
+      </view>
+      
+      <view class="quantity-section">
+        <view class="quantity-title">数量</view>
+        <view class="quantity-control">
+          <view class="quantity-btn minus {{quantity <= 1 ? 'disabled' : ''}}" bindtap="changeQuantity" data-type="minus"></view>
+          <view class="quantity-value">{{quantity}}</view>
+          <view class="quantity-btn plus {{quantity >= 99 ? 'disabled' : ''}}" bindtap="changeQuantity" data-type="plus"></view>
+        </view>
+      </view>
+    </view>
+    
+    <view class="egg-preview card">
+      <view class="egg-illustration"></view>
+      <view class="egg-info">
+        <view class="egg-title">{{selectedProduct.name || '仙嘟嘟新鲜鸡蛋'}}</view>
+        <view class="egg-desc">{{selectedProduct.description || '新鲜直供，营养健康'}}</view>
+      </view>
+    </view>
+    
+    <view class="checkout-bar">
+      <view class="total-price">
+        <text>合计：</text>
+        <text class="price-value">¥{{totalPrice}}</text>
+      </view>
+      <view class="checkout-btn" bindtap="submitOrder">立即购买</view>
+    </view>
+    
+    <view class="reset-btn" bindtap="resetScan">重新扫码</view>
+  </block>
+</view>

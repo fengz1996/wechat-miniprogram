@@ -2,23 +2,27 @@
   "pages": [
     "pages/index/index",
     "pages/menu/menu",
+    "pages/dish/dish",
     "pages/cart/cart",
-    "pages/order/order", 
+    "pages/order/order",
+    "pages/order-detail/order-detail",
     "pages/profile/profile",
-    "pages/dish/dish"
+    "pages/address/address",
+    "pages/address-edit/address-edit"
   ],
   "window": {
-    "backgroundColor": "#F8F8F8",
     "backgroundTextStyle": "light",
-    "navigationBarBackgroundColor": "#FF7F24",
+    "navigationBarBackgroundColor": "#E86C00",
     "navigationBarTitleText": "巴巴美食",
-    "navigationBarTextStyle": "white"
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#F9F9F9"
   },
   "tabBar": {
-    "color": "#999999",
-    "selectedColor": "#FF7F24",
-    "backgroundColor": "#ffffff",
-    "borderStyle": "black",
+    "custom": true,
+    "color": "#757575",
+    "selectedColor": "#E86C00",
+    "backgroundColor": "#FFFFFF",
+    "borderStyle": "white",
     "list": [
       {
         "pagePath": "pages/index/index",
@@ -38,5 +42,10 @@
       }
     ]
   },
-  "sitemapLocation": "sitemap.json"
+  "usingComponents": {},
+  "style": "v2",
+  "sitemapLocation": "sitemap.json",
+  "networkTimeout": {
+    "request": 10000
+  }
 }

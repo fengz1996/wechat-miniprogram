@@ -1,0 +1,885 @@
+.container {
+  padding-bottom: 30rpx;
+}
+
+.user-header {
+  position: relative;
+  width: 100%;
+  height: 420rpx;
+}
+
+.user-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #FF9248 0%, #FF7B3B 100%);
+  z-index: 0;
+}
+
+.user-bg::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 300rpx;
+  height: 300rpx;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  transform: translate(100rpx, -100rpx);
+}
+
+.user-bg::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 200rpx;
+  height: 200rpx;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  transform: translate(-100rpx, 100rpx);
+}
+
+.user-info-box {
+  position: relative;
+  z-index: 1;
+  padding: 60rpx 40rpx 0;
+  display: flex;
+  align-items: center;
+}
+
+.user-avatar {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 50%;
+  background: white;
+  overflow: hidden;
+  box-shadow: 0 4rpx 10rpx rgba(0, 0, 0, 0.1);
+}
+
+.user-avatar-placeholder {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4rpx 10rpx rgba(0, 0, 0, 0.1);
+}
+
+.user-avatar-text {
+  color: white;
+  font-size: 30rpx;
+}
+
+.user-info {
+  flex: 1;
+  padding: 0 30rpx;
+  color: white;
+}
+
+.user-name {
+  font-size: 36rpx;
+  font-weight: 600;
+  margin-bottom: 10rpx;
+}
+
+.user-level {
+  font-size: 24rpx;
+  padding: 4rpx 16rpx;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 20rpx;
+  display: inline-block;
+}
+
+.login-btn {
+  font-size: 34rpx;
+  font-weight: 600;
+  margin-bottom: 10rpx;
+}
+
+.login-tip {
+  font-size: 24rpx;
+  opacity: 0.9;
+}
+
+.user-qrcode {
+  width: 60rpx;
+  height: 60rpx;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.qrcode-icon {
+  width: 30rpx;
+  height: 30rpx;
+  position: relative;
+}
+
+.qrcode-icon::before {
+  content: "⊡";
+  color: white;
+  font-size: 32rpx;
+}
+
+.user-stats {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 140rpx;
+  background: white;
+  border-radius: 20rpx 20rpx 0 0;
+  display: flex;
+  padding: 0 40rpx;
+  box-shadow: 0 -4rpx 10rpx rgba(0, 0, 0, 0.05);
+  z-index: 1;
+}
+
+.stat-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.stat-num {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 8rpx;
+}
+
+.stat-text {
+  font-size: 24rpx;
+  color: #999;
+}
+
+.menu-section {
+  margin-top: 20rpx;
+  background: white;
+  border-radius: 16rpx;
+  box-shadow: var(--card-shadow);
+  overflow: hidden;
+  margin: 20rpx;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  padding: 30rpx;
+  position: relative;
+}
+
+.menu-item::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 30rpx;
+  right: 30rpx;
+  height: 1rpx;
+  background: #F0F0F0;
+}
+
+.menu-item:last-child::after {
+  display: none;
+}
+
+.menu-icon {
+  width: 50rpx;
+  height: 50rpx;
+  border-radius: 10rpx;
+  background: #FFF5E6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 20rpx;
+  position: relative;
+}
+
+.menu-icon-order::after {
+  content: "⊞";
+  color: #FF9748;
+  font-size: 32rpx;
+}
+
+.menu-icon-wallet::after {
+  content: "₽";
+  color: #FF9748;
+  font-size: 36rpx;
+}
+
+.menu-icon-team::after {
+  content: "⍚";
+  color: #FF9748;
+  font-size: 32rpx;
+}
+
+.menu-icon-points::after {
+  content: "✦";
+  color: #FF9748;
+  font-size: 36rpx;
+}
+
+.menu-icon-help::after {
+  content: "?";
+  color: #FF9748;
+  font-size: 32rpx;
+  font-weight: bold;
+}
+
+.menu-icon-service::after {
+  content: "☎";
+  color: #FF9748;
+  font-size: 32rpx;
+}
+
+.menu-icon-setting::after {
+  content: "⚙";
+  color: #FF9748;
+  font-size: 32rpx;
+}
+
+.menu-info {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.menu-title {
+  font-size: 28rpx;
+  color: #333;
+}
+
+.menu-arrow {
+  width: 16rpx;
+  height: 16rpx;
+  border-top: 2rpx solid #CCCCCC;
+  border-right: 2rpx solid #CCCCCC;
+  transform: rotate(45deg);
+}
+
+.menu-badge {
+  min-width: 44rpx;
+  height: 36rpx;
+  padding: 0 12rpx;
+  background: #FFF0E6;
+  color: #FF7B3B;
+  font-size: 24rpx;
+  border-radius: 18rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 16rpx;
+}
+
+.card {
+  margin: 20rpx;
+  background: white;
+  border-radius: 16rpx;
+  box-shadow: var(--card-shadow);
+  overflow: hidden;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 30rpx;
+  border-bottom: 1rpx solid #F0F0F0;
+}
+
+.card-title {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #333;
+}
+
+.card-more {
+  font-size: 24rpx;
+  color: #999;
+}
+
+.empty-orders {
+  padding: 60rpx 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.empty-icon {
+  width: 100rpx;
+  height: 100rpx;
+  background: #F8F8F8;
+  border-radius: 50%;
+  margin-bottom: 20rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.empty-icon::after {
+  content: "⊞";
+  color: #CCCCCC;
+  font-size: 46rpx;
+}
+
+.empty-text {
+  font-size: 26rpx;
+  color: #999;
+}
+
+.orders-list {
+  padding: 0 30rpx;
+}
+
+.order-item {
+  padding: 30rpx 0;
+  border-bottom: 1rpx solid #F0F0F0;
+}
+
+.order-item:last-child {
+  border-bottom: none;
+}
+
+.order-info {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 16rpx;
+}
+
+.order-id {
+  font-size: 28rpx;
+  color: #333;
+}
+
+.order-date {
+  font-size: 24rpx;
+  color: #999;
+}
+
+.order-status {
+  display: flex;
+  justify-content: space-between;
+}
+
+.status-text {
+  font-size: 26rpx;
+  color: #FF7B3B;
+}
+
+.order-amount {
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #333;
+}
+
+.team-card {
+  margin-top: 30rpx;
+}
+
+.team-content {
+  display: flex;
+  padding: 30rpx;
+}
+
+.team-stat {
+  width: 180rpx;
+  height: 180rpx;
+  background: #FFF5E6;
+  border-radius: 10rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.team-num {
+  font-size: 48rpx;
+  font-weight: 600;
+  color: #FF7B3B;
+  margin-bottom: 10rpx;
+}
+
+.team-text {
+  font-size: 24rpx;
+  color: #999;
+}
+
+.team-chart {
+  flex: 1;
+  padding-left: 30rpx;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.chart-level {
+  height: 50rpx;
+  border-radius: 25rpx;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.level-1 {
+  width: 80%;
+  background: linear-gradient(90deg, #FF9248 0%, #FF7B3B 100%);
+}
+
+.level-2 {
+  width: 60%;
+  background: linear-gradient(90deg, #66BB6A 0%, #43A047 100%);
+}
+
+.level-3 {
+  width: 40%;
+  background: linear-gradient(90deg, #42A5F5 0%, #1E88E5 100%);
+}
+
+.level-text {
+  position: absolute;
+  left: 20rpx;
+  color: white;
+  font-size: 24rpx;
+}
+
+.level-num {
+  position: absolute;
+  right: 20rpx;
+  color: white;
+  font-size: 24rpx;
+  font-weight: 600;
+}
+
+.service-menu {
+  margin-top: 30rpx;
+}
+
+.about-section {
+  margin-top: 40rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.about-logo {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16rpx;
+}
+
+.logo-icon {
+  width: 60rpx;
+  height: 60rpx;
+  border-radius: 16rpx;
+  background: linear-gradient(135deg, #FF9248 0%, #FF7B3B 100%);
+  margin-right: 16rpx;
+  position: relative;
+  box-shadow: 0 4rpx 8rpx rgba(255, 123, 59, 0.2);
+}
+
+.logo-icon::after {
+  content: "仙";
+  color: white;
+  font-size: 32rpx;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-weight: bold;
+}
+
+.logo-text {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #333;
+}
+
+.about-version {
+  font-size: 24rpx;
+  color: #999;
+}.container {
+  padding-bottom: 30px;
+}
+
+.user-header {
+  position: relative;
+  height: 200rpx;
+  margin-bottom: 80rpx;
+}
+
+.user-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 200rpx;
+  background: linear-gradient(135deg, #FFD54F 0%, #FF9800 100%);
+  z-index: 1;
+}
+
+.user-bg::before {
+  content: '';
+  position: absolute;
+  top: -20%;
+  right: -10%;
+  width: 200rpx;
+  height: 200rpx;
+  background: rgba(255,255,255,0.2);
+  border-radius: 50%;
+}
+
+.user-bg::after {
+  content: '';
+  position: absolute;
+  bottom: -10%;
+  left: -5%;
+  width: 150rpx;
+  height: 150rpx;
+  background: rgba(255,255,255,0.2);
+  border-radius: 50%;
+}
+
+.user-info {
+  position: absolute;
+  top: 30rpx;
+  left: 30rpx;
+  right: 30rpx;
+  height: 200rpx;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+}
+
+.avatar-container {
+  position: relative;
+  width: 140rpx;
+  height: 140rpx;
+  border-radius: 70rpx;
+  background-color: white;
+  box-shadow: var(--shadow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.avatar {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 60rpx;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #FFF3E0 0%, #FFB74D 100%);
+  color: white;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.avatar-placeholder {
+  position: relative;
+  width: 50%;
+  height: 50%;
+  border-radius: 50%;
+  border: 2px solid white;
+}
+
+.avatar-placeholder::after {
+  content: '';
+  position: absolute;
+  bottom: -60%;
+  left: 0;
+  width: 100%;
+  height: 50%;
+  background: white;
+  border-radius: 50% 50% 0 0;
+}
+
+.avatar-text {
+  text-transform: uppercase;
+}
+
+.user-detail {
+  margin-left: 30rpx;
+  flex: 1;
+  color: white;
+}
+
+.login-btn {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.username {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 6px;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+
+.user-id {
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+.wallet-card, .team-card {
+  margin: 15px;
+}
+
+.wallet-header, .team-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.wallet-title, .team-title {
+  font-size: 16px;
+  font-weight: bold;
+  color: var(--text-color);
+}
+
+.wallet-action, .team-action {
+  font-size: 14px;
+  color: var(--secondary-color);
+}
+
+.wallet-content {
+  display: flex;
+  align-items: center;
+}
+
+.wallet-item {
+  flex: 1;
+  text-align: center;
+}
+
+.wallet-divider {
+  width: 1px;
+  height: 30px;
+  background-color: #EEEEEE;
+}
+
+.wallet-value {
+  font-size: 20px;
+  font-weight: bold;
+  color: var(--secondary-color);
+  margin-bottom: 4px;
+}
+
+.wallet-label {
+  font-size: 12px;
+  color: var(--light-text);
+}
+
+.team-content {
+  display: flex;
+  justify-content: space-between;
+}
+
+.team-item {
+  flex: 1;
+  text-align: center;
+}
+
+.team-value {
+  font-size: 18px;
+  font-weight: bold;
+  color: var(--secondary-color);
+  margin-bottom: 4px;
+}
+
+.team-label {
+  font-size: 12px;
+  color: var(--light-text);
+}
+
+.menu-list {
+  margin: 15px;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  margin-bottom: 10px;
+}
+
+.menu-icon {
+  width: 24px;
+  height: 24px;
+  margin-right: 12px;
+  position: relative;
+}
+
+.order-icon::before {
+  content: '';
+  position: absolute;
+  top: 4px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--secondary-color);
+  border-radius: 3px;
+}
+
+.order-icon::after {
+  content: '';
+  position: absolute;
+  top: 10px;
+  left: 6px;
+  width: 12px;
+  height: 1px;
+  background: var(--secondary-color);
+  box-shadow: 0 3px 0 var(--secondary-color), 0 6px 0 var(--secondary-color);
+}
+
+.wallet-icon::before {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 18px;
+  height: 14px;
+  border: 2px solid var(--secondary-color);
+  border-radius: 3px;
+}
+
+.wallet-icon::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 6px;
+  width: 10px;
+  height: 3px;
+  border: 2px solid var(--secondary-color);
+  border-bottom: none;
+  border-radius: 3px 3px 0 0;
+}
+
+.team-icon::before {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 8px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--secondary-color);
+}
+
+.team-icon::after {
+  content: '';
+  position: absolute;
+  top: 13px;
+  left: 0;
+  width: 24px;
+  height: 10px;
+  border: 2px solid var(--secondary-color);
+  border-top: none;
+  border-radius: 0 0 12px 12px;
+}
+
+.points-icon::before {
+  content: '';
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 16px;
+  height: 16px;
+  background: var(--secondary-color);
+  clip-path: polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%);
+}
+
+.points-icon::after {
+  content: '';
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  width: 8px;
+  height: 8px;
+  background: white;
+  clip-path: polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%);
+}
+
+.about-icon::before {
+  content: '';
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid var(--secondary-color);
+}
+
+.about-icon::after {
+  content: '';
+  position: absolute;
+  top: 10px;
+  left: 11px;
+  width: 2px;
+  height: 8px;
+  background: var(--secondary-color);
+}
+
+.settings-icon::before {
+  content: '';
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  width: 8px;
+  height: 8px;
+  background: var(--secondary-color);
+  border-radius: 50%;
+}
+
+.settings-icon::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 24px;
+  height: 24px;
+  border: 2px solid var(--secondary-color);
+  border-radius: 50%;
+  clip-path: polygon(
+    50% 0%, 54% 10%, 65% 10%, 65% 15%, 54% 15%, 50% 25%,
+    46% 15%, 35% 15%, 35% 10%, 46% 10%,
+    /* Repeat for all sides */
+    50% 0%, 54% 10%, 65% 10%, 65% 15%, 54% 15%, 50% 25%,
+    46% 15%, 35% 15%, 35% 10%, 46% 10%
+  );
+  transform: rotate(45deg);
+}
+
+.menu-name {
+  flex: 1;
+  font-size: 16px;
+}
+
+.menu-arrow {
+  width: 10px;
+  height: 10px;
+  border-top: 2px solid #CCCCCC;
+  border-right: 2px solid #CCCCCC;
+  transform: rotate(45deg);
+}
+
+.app-version {
+  text-align: center;
+  color: var(--light-text);
+  font-size: 12px;
+  margin-top: 30px;
+}

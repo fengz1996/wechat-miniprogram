@@ -1,0 +1,39 @@
+<view class="tab-bar">
+  <view class="tab-bar-border"></view>
+  <view wx:for="{{list}}" wx:key="index" class="tab-bar-item {{selected === index ? 'active' : ''}}" 
+        data-path="{{item.pagePath}}" data-index="{{index}}" bindtap="switchTab">
+    <view class="tab-icon-wrapper">
+      <!-- 首页图标 -->
+      <view wx:if="{{index === 0}}" class="tab-icon home-icon {{selected === index ? 'selected' : ''}}">
+        <view class="home-roof"></view>
+        <view class="home-base"></view>
+      </view>
+      
+      <!-- 分类图标 -->
+      <view wx:elif="{{index === 1}}" class="tab-icon category-icon {{selected === index ? 'selected' : ''}}">
+        <view class="category-grid-1"></view>
+        <view class="category-grid-2"></view>
+        <view class="category-grid-3"></view>
+        <view class="category-grid-4"></view>
+      </view>
+      
+      <!-- 购物车图标 -->
+      <view wx:elif="{{index === 2}}" class="tab-icon cart-icon {{selected === index ? 'selected' : ''}}">
+        <view class="cart-body"></view>
+        <view class="cart-handle"></view>
+        <view class="cart-wheel-left"></view>
+        <view class="cart-wheel-right"></view>
+        <view wx:if="{{cartCount > 0}}" class="tab-badge">{{cartCount > 99 ? '99+' : cartCount}}</view>
+      </view>
+      
+      <!-- 我的图标 -->
+      <view wx:elif="{{index === 3}}" class="tab-icon user-icon {{selected === index ? 'selected' : ''}}">
+        <view class="user-head"></view>
+        <view class="user-body"></view>
+      </view>
+      
+      <view wx:if="{{selected === index}}" class="tab-active-indicator"></view>
+    </view>
+    <view class="tab-text" style="color: {{selected === index ? selectedColor : color}}">{{item.text}}</view>
+  </view>
+</view>

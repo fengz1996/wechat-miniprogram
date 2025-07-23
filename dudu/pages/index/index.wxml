@@ -1,0 +1,71 @@
+<view class="container">
+  <view class="banner-section">
+    <swiper class="banner" indicator-dots="{{false}}" autoplay="{{true}}" interval="{{5000}}" duration="{{500}}" circular="{{true}}" bindchange="swiperChange">
+      <block wx:for="{{bannerList}}" wx:key="index">
+        <swiper-item>
+          <view class="banner-item banner-item-{{index}}">
+            <view class="banner-content">
+              <view class="banner-title">{{item.title}}</view>
+              <view class="banner-desc">{{item.desc}}</view>
+            </view>
+          </view>
+        </swiper-item>
+      </block>
+    </swiper>
+    <view class="dots">
+      <block wx:for="{{bannerList}}" wx:key="index">
+        <view class="dot {{index == swiperCurrent ? 'active' : ''}}"></view>
+      </block>
+    </view>
+  </view>
+  
+  <view class="quick-actions">
+    <view class="action-btn" bindtap="navigateToScan">
+      <view class="action-icon scan-btn-icon"></view>
+      <text>扫码购蛋</text>
+    </view>
+  </view>
+  
+  <view class="company-culture">
+    <view class="section-title">企业文化</view>
+    <view class="vision-mission card">
+      <view class="title">品牌愿景</view>
+      <view class="content">{{companyInfo.vision}}</view>
+      
+      <view class="divider"></view>
+      
+      <view class="title">品牌使命</view>
+      <view class="content">{{companyInfo.mission}}</view>
+    </view>
+    
+    <view class="values">
+      <block wx:for="{{companyInfo.values}}" wx:key="index">
+        <view class="value-card card">
+          <view class="value-icon value-icon-{{index}}"></view>
+          <view class="value-content">
+            <view class="value-title">{{item.title}}</view>
+            <view class="value-desc">{{item.desc}}</view>
+          </view>
+        </view>
+      </block>
+    </view>
+  </view>
+  
+  <view class="product-intro card">
+    <view class="title">产品特色</view>
+    <view class="product-features">
+      <view class="feature">
+        <view class="feature-icon feature-icon-1"></view>
+        <text>富含蛋白质</text>
+      </view>
+      <view class="feature">
+        <view class="feature-icon feature-icon-2"></view>
+        <text>新鲜直供</text>
+      </view>
+      <view class="feature">
+        <view class="feature-icon feature-icon-3"></view>
+        <text>无抗养殖</text>
+      </view>
+    </view>
+  </view>
+</view>

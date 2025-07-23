@@ -1,185 +1,161 @@
+// dish.js
+const app = getApp();
+
 Page({
   data: {
-    dish: null,
-    recommendDishes: [],
+    id: null,
+    product: {},
+    quantity: 1,
+    cartCount: 0,
     cartTotal: 0
   },
 
-  onLoad: function (options) {
-    const id = parseInt(options.id);
-    // 实际应用中应该从数据库获取菜品信息
-    // 这里模拟从静态数据中获取
-    this.loadDishData(id);
-    this.loadRecommendDishes();
+  onLoad: function(options) {
+    if (options.id) {
+      this.setData({
+        id: options.id
+      });
+      this.loadProductDetail(options.id);
+    } else {
+      app.showToast('商品ID不存在');
+      setTimeout(() => {
+        wx.navigateBack();
+      }, 1500);
+    }
   },
   
   onShow: function() {
-    this.updateCartTotal();
+    // 更新购物车数据
+    this.setData({
+      cartCount: app.globalData.cartCount,
+      cartTotal: app.globalData.cartTotal.toFixed(2)
+    });
   },
   
-  loadDishData: function(id) {
-    // 模拟从所有分类菜品中查找
-    const categories = [
-      { id: 'beef', name: '牛肉类', dishes: [] },
-      { id: 'chicken', name: '鸡肉类', dishes: [] },
-      { id: 'pork', name: '猪肉类', dishes: [] },
-      { id: 'seafood', name: '水产类', dishes: [] },
-      { id: 'vegetable', name: '素菜类', dishes: [] },
-      { id: 'drinks', name: '酒水', dishes: [] }
-    ];
+  // 加载商品详情
+  loadProductDetail: function(id) {
+    app.showLoading();
     
-    // 模拟菜品数据
-    categories[0].dishes = [
-      { 
-        id: 1, 
-        name: '秘制牛肉干(微辣)', 
-        price: 63, 
-        imageUrl: '../../images/dish1.jpg',
-        weight: '330克',
-        sales: 200,
-        description: '选用上等牛肉，采用传统工艺精心制作，肉质紧实有嚼劲，辣味适中，回味悠长，是下酒佳品。'
-      },
-      { 
-        id: 2, 
-        name: '麻辣牛肉干', 
-        price: 39, 
-        imageUrl: '../../images/dish2.jpg',
-        weight: '180克',
-        sales: 180,
-        description: '麻辣鲜香，口感独特，采用多种香料熬制，辣而不燥，麻而不木，让人越吃越有味。'
-      }
-    ];
-    
-    // 在所有菜品中查找指定ID的菜品
-    let foundDish = null;
-    for (const category of categories) {
-      for (const dish of category.dishes) {
-        if (dish.id === id) {
-          foundDish = dish;
-          break;
+    wx.request({
+      url: app.globalData.apiBaseUrl + '/mp/api/products/' + id,
+      method: 'GET',
+      success: res => {
+        if (res.data.code === 200) {
+          this.setData({
+            product: res.data.data
+          });
+        } else {
+          app.showToast('获取商品详情失败');
+          setTimeout(() => {
+            wx.navigateBack();
+          }, 1500);
         }
+      },
+      fail: err => {
+        console.error('请求失败:', err);
+        app.showToast('网络请求失败');
+        setTimeout(() => {
+          wx.navigateBack();
+        }, 1500);
+      },
+      complete: () => {
+        app.hideLoading();
       }
-      if (foundDish) break;
-    }
-    
-    // 如果找不到指定ID的菜品，使用默认数据
-    if (!foundDish) {
-      foundDish = {
-        id: 1, 
-        name: '秘制牛肉干(微辣)', 
-        price: 63, 
-        imageUrl: '../../images/dish1.jpg',
-        weight: '330克',
-        sales: 200,
-        description: '选用上等牛肉，采用传统工艺精心制作，肉质紧实有嚼劲，辣味适中，回味悠长，是下酒佳品。'
-      };
-    }
-    
-    this.setData({ dish: foundDish });
-  },
-  
-  loadRecommendDishes: function() {
-    // 模拟推荐菜品数据
-    const recommendDishes = [
-      { 
-        id: 2, 
-        name: '麻辣牛肉干', 
-        price: 39, 
-        imageUrl: '../../images/dish2.jpg'
-      },
-      { 
-        id: 3, 
-        name: '五香牛肉干', 
-        price: 39, 
-        imageUrl: '../../images/dish3.jpg'
-      },
-      { 
-        id: 6, 
-        name: '香辣孜然鸡', 
-        price: 29, 
-        imageUrl: '../../images/dish6.jpg'
-      },
-      { 
-        id: 10, 
-        name: '香辣猪肉干', 
-        price: 28, 
-        imageUrl: '../../images/dish10.jpg'
-      },
-      { 
-        id: 13, 
-        name: '香辣鱼块', 
-        price: 25, 
-        imageUrl: '../../images/dish13.jpg'
-      }
-    ];
-    
-    this.setData({ recommendDishes });
-  },
-  
-  updateCartTotal: function() {
-    const app = getApp();
-    const cart = app.globalData.cart;
-    
-    let total = 0;
-    cart.forEach(item => {
-      total += item.quantity;
-    });
-    
-    this.setData({ cartTotal: total });
-  },
-  
-  addToCart: function() {
-    const dish = this.data.dish;
-    const app = getApp();
-    const cart = app.globalData.cart;
-    
-    // 查找购物车中是否已有该商品
-    const index = cart.findIndex(item => item.id === dish.id);
-    
-    if (index > -1) {
-      // 已有该商品，数量+1
-      cart[index].quantity += 1;
-    } else {
-      // 没有该商品，添加到购物车
-      cart.push({
-        ...dish,
-        quantity: 1
-      });
-    }
-    
-    this.updateCartTotal();
-    
-    wx.showToast({
-      title: '已加入购物车',
-      icon: 'success'
     });
   },
   
-  buyNow: function() {
-    // 加入购物车并直接跳转到购物车页面
-    this.addToCart();
-    
-    wx.switchTab({
-      url: '/pages/cart/cart'
+  // 导航回上一页
+  navigateBack: function() {
+    wx.navigateBack();
+  },
+  
+  // 导航到另一个商品详情
+  navigateToProduct: function(e) {
+    const productId = e.currentTarget.dataset.id;
+    // 使用redirectTo避免页面堆栈过多
+    wx.redirectTo({
+      url: `/pages/dish/dish?id=${productId}`
     });
   },
   
+  // 导航到购物车
   navigateToCart: function() {
     wx.switchTab({
       url: '/pages/cart/cart'
     });
   },
   
-  navigateToDish: function(e) {
-    const id = e.currentTarget.dataset.id;
-    // 如果跳转到当前页面，重新加载数据
-    if (id === this.data.dish.id) {
-      this.loadDishData(id);
+  // 增加商品数量
+  increaseQuantity: function() {
+    // 限制最大购买数量为99
+    if (this.data.quantity < 99) {
+      this.setData({
+        quantity: this.data.quantity + 1
+      });
+    }
+  },
+  
+  // 减少商品数量
+  decreaseQuantity: function() {
+    if (this.data.quantity > 1) {
+      this.setData({
+        quantity: this.data.quantity - 1
+      });
+    }
+  },
+  
+  // 添加到购物车
+  addToCart: function() {
+    // 检查商品是否有效
+    if (!this.data.product || !this.data.product.id) {
+      app.showToast('商品信息不完整');
       return;
     }
     
-    wx.navigateTo({
-      url: `/pages/dish/dish?id=${id}`
+    // 添加到购物车
+    if (app.addToCart(this.data.product, this.data.quantity)) {
+      // 更新购物车数据
+      this.setData({
+        cartCount: app.globalData.cartCount,
+        cartTotal: app.globalData.cartTotal.toFixed(2)
+      });
+      
+      // 显示成功提示
+      app.showToast('已加入购物车', 'success');
+      
+      // 重置数量
+      this.setData({
+        quantity: 1
+      });
+    }
+  },
+  
+  // 立即购买
+  buyNow: function() {
+    // 检查商品是否有效
+    if (!this.data.product || !this.data.product.id) {
+      app.showToast('商品信息不完整');
+      return;
+    }
+    
+    // 先清空购物车
+    app.clearCart();
+    
+    // 添加当前商品到购物车
+    app.addToCart(this.data.product, this.data.quantity);
+    
+    // 导航到购物车页面
+    wx.switchTab({
+      url: '/pages/cart/cart'
     });
+  },
+  
+  // 分享
+  onShareAppMessage: function() {
+    return {
+      title: this.data.product.name,
+      path: '/pages/dish/dish?id=' + this.data.id,
+      imageUrl: this.data.product.image
+    };
   }
 })

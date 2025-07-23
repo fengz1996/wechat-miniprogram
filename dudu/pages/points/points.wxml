@@ -1,0 +1,43 @@
+<view class="container">
+  <view class="points-header">
+    <view class="points-section">
+      <view class="points-title">我的积分</view>
+      <view class="points-value">{{points}}</view>
+      <view class="use-btn" bindtap="navigateToMall">去使用</view>
+    </view>
+  </view>
+  
+  <view class="rules-card">
+    <view class="rules-title">积分规则</view>
+    <view class="rules-content">
+      <view class="rule-item">1. 推广设备可获得积分奖励</view>
+      <view class="rule-item">2. 设备销售可获得积分奖励</view>
+      <view class="rule-item">3. 积分可在商城兑换商品</view>
+      <view class="rule-item">4. 积分不支持提现</view>
+    </view>
+  </view>
+  
+  <view class="record-title">积分明细</view>
+  <view class="record-list">
+    <block wx:if="{{transactions.length > 0}}">
+      <view class="record-item" wx:for="{{transactions}}" wx:key="id">
+        <view class="record-info">
+          <view class="record-type">{{getPointTypeName(item.type)}}</view>
+          <view class="record-remark">{{item.remark || '积分变动'}}</view>
+          <view class="record-time">{{item.created_at}}</view>
+        </view>
+        <view class="record-points {{item.type === 1 ? 'income' : 'expense'}}">
+          {{item.type === 1 ? '+' : '-'}}{{item.points}}
+        </view>
+      </view>
+    </block>
+    
+    <view wx:if="{{transactions.length === 0 && !loading}}" class="empty-tip">
+      暂无积分记录
+    </view>
+    
+    <view wx:if="{{loading}}" class="loading-tip">
+      加载中...
+    </view>
+  </view>
+</view>

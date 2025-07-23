@@ -1,0 +1,89 @@
+<view class="container">
+  <view class="search-bar">
+    <view class="search-input">
+      <view class="search-icon"></view>
+      <input placeholder="搜索商品" disabled />
+    </view>
+  </view>
+  
+  <view class="banner-section">
+    <swiper class="banner" indicator-dots="{{false}}" autoplay="{{true}}" interval="{{5000}}" duration="{{500}}" circular="{{true}}" bindchange="swiperChange">
+      <block wx:for="{{banners}}" wx:key="index">
+        <swiper-item>
+          <view class="banner-item banner-item-{{index}}">
+            <view class="banner-content">
+              <view class="banner-title">{{item.title}}</view>
+              <view class="banner-desc">{{item.desc}}</view>
+            </view>
+          </view>
+        </swiper-item>
+      </block>
+    </swiper>
+    <view class="dots">
+      <block wx:for="{{banners}}" wx:key="index">
+        <view class="dot {{index == swiperCurrent ? 'active' : ''}}"></view>
+      </block>
+    </view>
+  </view>
+  
+  <view class="category-tabs">
+    <scroll-view scroll-x class="category-scroll">
+      <view class="category-list">
+        <block wx:for="{{categories}}" wx:key="id">
+          <view 
+            class="category-item {{currentCategory === index ? 'active' : ''}}" 
+            bindtap="changeCategory" 
+            data-index="{{index}}">
+            {{item.name}}
+          </view>
+        </block>
+      </view>
+    </scroll-view>
+  </view>
+  
+  <view class="payment-toggle" bindtap="togglePayMethod">
+    <text>{{payMethod === 'cash' ? '现金购买' : '积分兑换'}}</text>
+    <view class="toggle-switch {{payMethod === 'points' ? 'active' : ''}}">
+      <view class="toggle-handle"></view>
+    </view>
+  </view>
+  
+  <view class="product-list">
+    <block wx:if="{{products.length > 0}}">
+      <block wx:for="{{products}}" wx:key="id">
+        <view class="product-card card" bindtap="viewProductDetail" data-id="{{item.id}}">
+          <view class="product-image product-image-{{index % 6}}">
+            <view wx:if="{{index % 3 === 0}}" class="product-tag">热卖</view>
+          </view>
+          <view class="product-info">
+            <view class="product-name">{{item.name}}</view>
+            <view class="product-desc">{{item.description}}</view>
+            <view class="product-price-row">
+              <block wx:if="{{payMethod === 'cash'}}">
+                <view class="product-price">¥{{item.price}}</view>
+                <view class="product-original">¥{{item.original_price}}</view>
+              </block>
+              <block wx:else>
+                <view class="product-price">{{item.points_price}}积分</view>
+              </block>
+            </view>
+            <view class="product-action">
+              <view class="product-sales">销量 {{item.sales}}</view>
+              <view class="add-cart-btn" catchtap="addToCart" data-id="{{item.id}}">
+                <view class="cart-icon"></view>
+              </view>
+            </view>
+          </view>
+        </view>
+      </block>
+    </block>
+    
+    <view wx:if="{{products.length === 0 && !loading}}" class="empty-tip">
+      暂无商品数据
+    </view>
+    
+    <view wx:if="{{loading}}" class="loading-tip">
+      加载中...
+    </view>
+  </view>
+</view>
