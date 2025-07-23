@@ -4,7 +4,7 @@ page {
 }
 
 .container {
-  padding-bottom: 120rpx;
+  padding-bottom: 150rpx; /* 确保底部有足够空间 */
 }
 
 /* 地址选择部分样式 */
@@ -80,6 +80,7 @@ page {
 /* 购物车列表样式 */
 .cart-list {
   margin: 20rpx;
+  padding-bottom: 120rpx; /* 为底部结算栏留出空间 */
 }
 
 .cart-item {
@@ -183,11 +184,6 @@ page {
   font-weight: bold;
 }
 
-.item-price::before {
-  content: '¥';
-  font-size: 24rpx;
-}
-
 .quantity-control {
   display: flex;
   align-items: center;
@@ -274,7 +270,7 @@ page {
   opacity: 0.6;
 }
 
-/* 底部结算栏样式 */
+/* 底部结算栏样式 - 特别注意此部分 */
 .cart-footer {
   position: fixed;
   bottom: 0;
@@ -286,6 +282,7 @@ page {
   align-items: center;
   padding: 0 30rpx;
   box-shadow: 0 -2rpx 10rpx rgba(0, 0, 0, 0.05);
+  z-index: 100; /* 确保在最上层 */
 }
 
 .select-all {
@@ -315,6 +312,7 @@ page {
   font-weight: bold;
 }
 
+/* 支付按钮样式 - 调整为button元素 */
 .checkout-btn {
   width: 240rpx;
   height: 80rpx;
@@ -325,6 +323,10 @@ page {
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 0;
+  margin: 0;
+  line-height: 80rpx;
+  border: none;
 }
 
 .checkout-btn.disabled {
@@ -376,4 +378,18 @@ page {
 
 .safe-area-bottom {
   height: 68rpx;
+}
+
+/* 按钮相关的默认样式覆盖 */
+button {
+  background-color: transparent;
+  padding: 0;
+  margin: 0;
+  line-height: 1;
+  border-radius: 0;
+  border: none;
+}
+
+button::after {
+  border: none;
 }

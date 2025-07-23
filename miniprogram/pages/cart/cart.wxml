@@ -44,7 +44,7 @@
             <view class="item-name">{{item.name}}</view>
             
             <view class="item-bottom">
-              <view class="item-price">{{item.price}}</view>
+              <view class="item-price">¥{{item.price}}</view>
               
               <view class="quantity-control">
                 <view class="quantity-btn minus {{item.quantity <= 1 ? 'disabled' : ''}}" 
@@ -65,33 +65,31 @@
         </view>
       </view>
     </view>
-    
-    <!-- 底部结算栏 -->
-    <view class="cart-footer">
-      <view class="select-all" bindtap="toggleAllSelect">
-        <view class="checkbox {{allSelected ? 'checked' : ''}}"></view>
-        <text>全选</text>
-      </view>
-      
-      <view class="total-info">
-        <text>合计：</text>
-        <text class="total-price">¥{{totalPrice}}</text>
-      </view>
-      
-      <view class="checkout-btn {{selectedCount === 0 ? 'disabled' : ''}}" bindtap="checkout">
-        立即支付 ({{selectedCount}})
-      </view>
-    </view>
   </block>
   
   <!-- 空购物车状态 -->
   <view class="empty-cart" wx:if="{{showEmpty}}">
-    <view class="empty-icon">
-      <view class="icon-empty-cart"></view>
-    </view>
+    <view class="empty-icon"></view>
     <view class="empty-text">购物车空空如也~</view>
     <view class="empty-subtext">去添加一些美食吧</view>
     <button class="btn-go-shopping" bindtap="goShopping">去购物</button>
+  </view>
+  
+  <!-- 底部结算栏 - 注意：放在block外面确保即使其他部分有问题也能显示 -->
+  <view class="cart-footer" wx:if="{{!showEmpty}}">
+    <view class="select-all" bindtap="toggleAllSelect">
+      <view class="checkbox {{allSelected ? 'checked' : ''}}"></view>
+      <text>全选</text>
+    </view>
+    
+    <view class="total-info">
+      <text>合计：</text>
+      <text class="total-price">¥{{totalPrice}}</text>
+    </view>
+    
+    <button class="checkout-btn {{selectedCount === 0 ? 'disabled' : ''}}" bindtap="checkout">
+      立即支付 ({{selectedCount}})
+    </button>
   </view>
   
   <!-- 底部安全区域 -->
