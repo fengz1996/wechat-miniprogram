@@ -1,2 +1,43 @@
-<!--pages/address/edit.wxml-->
-<text>pages/address/edit.wxml</text>
+<view class="container" wx:if="{{address}}">
+  <view class="form">
+    <view class="form-item">
+      <view class="label">收货人</view>
+      <input class="input" value="{{address.userName}}" placeholder="请输入姓名" data-field="userName" bindinput="inputChange" />
+    </view>
+    
+    <view class="form-item">
+      <view class="label">手机号码</view>
+      <input class="input" type="number" value="{{address.telNumber}}" placeholder="请输入手机号码" data-field="telNumber" bindinput="inputChange" />
+    </view>
+    
+    <view class="form-item">
+      <view class="label">所在地区</view>
+      <view class="input region" bindtap="chooseWxAddress">
+        {{address.provinceName}}{{address.cityName}}{{address.countyName}}
+        <view class="arrow-right"></view>
+      </view>
+    </view>
+    
+    <view class="form-item">
+      <view class="label">详细地址</view>
+      <textarea class="textarea" value="{{address.detailInfo}}" placeholder="请输入详细地址" data-field="detailInfo" bindinput="inputChange" />
+    </view>
+    
+    <view class="form-item">
+      <view class="label">邮政编码</view>
+      <input class="input" type="number" value="{{address.postalCode}}" placeholder="请输入邮政编码（选填）" data-field="postalCode" bindinput="inputChange" />
+    </view>
+    
+    <view class="form-item switch">
+      <view class="label">设为默认地址</view>
+      <switch checked="{{address.isDefault}}" color="#ff4500" data-field="isDefault" bindchange="inputChange" />
+    </view>
+  </view>
+  
+  <view class="wx-address-btn" bindtap="chooseWxAddress">
+    <view class="wx-icon"></view>
+    <text>使用微信收货地址</text>
+  </view>
+  
+  <view class="btn-save" bindtap="saveAddress">保存</view>
+</view>

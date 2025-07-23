@@ -1,5 +1,27 @@
 <view class="container">
   <block wx:if="{{!showEmpty}}">
+    <!-- 地址选择 -->
+    <view class="address-section" bindtap="chooseAddress">
+      <view wx:if="{{address}}" class="address-info">
+        <view class="address-icon"></view>
+        <view class="address-content">
+          <view class="contact-info">
+            <text class="name">{{address.userName}}</text>
+            <text class="phone">{{address.telNumber}}</text>
+          </view>
+          <view class="address-detail">
+            {{address.provinceName}}{{address.cityName}}{{address.countyName}}{{address.detailInfo}}
+          </view>
+        </view>
+        <view class="arrow-right"></view>
+      </view>
+      <view wx:else class="no-address">
+        <view class="address-icon"></view>
+        <text>请选择收货地址</text>
+        <view class="arrow-right"></view>
+      </view>
+    </view>
+    
     <!-- 购物车列表 -->
     <view class="cart-list">
       <view class="cart-item" wx:for="{{cartItems}}" wx:key="id">
@@ -57,7 +79,7 @@
       </view>
       
       <view class="checkout-btn {{selectedCount === 0 ? 'disabled' : ''}}" bindtap="checkout">
-        结算 ({{selectedCount}})
+        立即支付 ({{selectedCount}})
       </view>
     </view>
   </block>

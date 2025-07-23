@@ -1,4 +1,3 @@
-// pages/cart/cart.js
 const app = getApp()
 
 Page({
@@ -7,7 +6,9 @@ Page({
     totalPrice: 0,
     selectedCount: 0,
     allSelected: false,
-    showEmpty: false
+    showEmpty: false,
+    address: null,  // 添加地址属性
+    showAddressModal: false  // 用于控制地址选择模态框
   },
 
   onLoad: function () {
@@ -17,6 +18,56 @@ Page({
   onShow: function () {
     // 每次显示页面时更新购物车数据
     this.loadCartData()
+    
+    // 获取地址信息
+    this.loadAddress()
+  },
+
+  // 加载用户地址
+  loadAddress: function() {
+    // 从本地存储获取默认地址
+    const address = wx.getStorageSync('defaultAddress')
+    if (address) {
+      this.setData({
+        address: address
+      })
+    }
+  },
+
+  // 选择地址
+  chooseAddress: function() {
+    wx.chooseAddress({
+      success: (res) => {
+        const address = {
+          userName: res.userName,
+          telNumber: res.telNumber,
+          provinceName: res.provinceName,
+          cityName: res.cityName,
+          countyName: res.countyName,
+          detailInfo: res.detailInfo,
+          postalCode: res.postalCode
+        }
+        
+        // 保存地址
+        wx.setStorageSync('defaultAddress', address)
+        this.setData({
+          address: address
+        })
+        
+        wx.showToast({
+          title: '地址设置成功',
+          icon: 'success'
+        })
+      },
+      fail: (err) => {
+        if (err.errMsg !== 'chooseAddress:fail cancel') {
+          wx.showToast({
+            title: '获取地址失败',
+            icon: 'none'
+          })
+        }
+      }
+    })
   },
 
   // 加载购物车数据
@@ -147,16 +198,138 @@ Page({
       return
     }
     
+    // 检查是否已选择地址
+    if (!this.data.address) {
+      wx.showModal({
+        title: '提示',
+        content: '请先选择收货地址',
+        confirmText: '选择地址',
+        success: (res) => {
+          if (res.confirm) {
+            this.chooseAddress()
+          }
+        }
+      })
+      return
+    }
+    
+    // 确认支付
+    wx.showModal({
+      title: '确认支付',
+      content: `需支付 ¥${this.data.totalPrice}，是否继续？`,
+      confirmText: '确认支付',
+      success: (res) => {
+        if (res.confirm) {
+          this.payOrder()
+        }
+      }
+    })
+  },
+
+  // 支付订单
+  payOrder: function() {
+    if (this.data.selectedCount === 0) {
+      wx.showToast({ title: '请选择商品', icon: 'none' })
+      return
+    }
+    
+    if (!this.data.address) {
+      wx.showModal({
+        title: '提示',
+        content: '请先选择收货地址',
+        confirmText: '选择地址',
+        success: (res) => {
+          if (res.confirm) {
+            this.chooseAddress()
+          }
+        }
+      })
+      return
+    }
+
+    wx.showLoading({ title: '支付中...' })
+
     // 获取选中的商品
     const selectedItems = this.data.cartItems.filter(item => item.selected)
+
+    // 调用云函数统一下单获取支付参数
+    wx.cloud.callFunction({
+      name: 'payOrder', // 云函数名
+      data: {
+        cart: selectedItems,
+        address: this.data.address,
+        totalAmount: parseFloat(this.data.totalPrice)
+      },
+      success: res => {
+        const payment = res.result.payment
+        wx.requestPayment({
+          ...payment, // timeStamp, nonceStr, package, signType, paySign
+          success: payRes => {
+            // 支付成功后处理
+            this.handlePaymentSuccess(selectedItems)
+          },
+          fail: err => {
+            if (err.errMsg !== 'requestPayment:fail cancel') {
+              wx.showToast({ title: '支付失败', icon: 'none' })
+            } else {
+              wx.showToast({ title: '取消支付', icon: 'none' })
+            }
+          }
+        })
+      },
+      fail: err => {
+        wx.showToast({ 
+          title: '支付失败：' + (err.errMsg || '未知错误'), 
+          icon: 'none' 
+        })
+      },
+      complete: () => {
+        wx.hideLoading()
+      }
+    })
+  },
+  
+  // 支付成功后的处理
+  handlePaymentSuccess: function(paidItems) {
+    // 从购物车中移除已购买商品
+    let cart = wx.getStorageSync('cart') || []
+    const paidItemIds = paidItems.map(item => item.id)
     
-    // 保存到全局变量，方便订单页面使用
-    app.globalData.checkoutItems = selectedItems
-    app.globalData.checkoutTotal = parseFloat(this.data.totalPrice)
+    cart = cart.filter(item => !paidItemIds.includes(item.id) || !item.selected)
     
-    // 跳转到订单确认页面
-    wx.navigateTo({
-      url: '/pages/order/order'
+    // 更新购物车
+    wx.setStorageSync('cart', cart)
+    
+    // 保存订单信息
+    const orderInfo = {
+      id: 'ORDER' + Date.now(),
+      items: paidItems,
+      totalAmount: parseFloat(this.data.totalPrice),
+      address: this.data.address,
+      createTime: new Date().getTime(),
+      status: 'paid'
+    }
+    
+    // 保存到订单列表
+    let orders = wx.getStorageSync('orders') || []
+    orders.unshift(orderInfo)
+    wx.setStorageSync('orders', orders)
+    
+    // 更新页面数据
+    this.loadCartData()
+    
+    wx.showToast({ 
+      title: '支付成功', 
+      icon: 'success',
+      duration: 1500,
+      success: () => {
+        // 延迟跳转，让用户看到成功提示
+        setTimeout(() => {
+          wx.navigateTo({
+            url: '/pages/order/order?id=' + orderInfo.id
+          })
+        }, 1500)
+      }
     })
   },
 
@@ -166,7 +339,41 @@ Page({
       url: '/pages/index/index'
     })
   },
+  onShow: function() {
+    // 每次显示页面时更新购物车数据
+    this.loadCartData()
+    
+    // 检查是否有选中的地址
+    const selectedAddress = wx.getStorageSync('selectedAddress')
+    if (selectedAddress) {
+      this.setData({
+        address: selectedAddress
+      })
+      // 清除临时选中的地址
+      wx.removeStorageSync('selectedAddress')
+    } else {
+      // 加载默认地址
+      this.loadAddress()
+    }
+  },
 
+  // 加载用户地址
+  loadAddress: function() {
+    // 从本地存储获取默认地址
+    const address = wx.getStorageSync('defaultAddress')
+    if (address) {
+      this.setData({
+        address: address
+      })
+    }
+  },
+
+  // 选择地址
+  chooseAddress: function() {
+    wx.navigateTo({
+      url: '/pages/address/address?from=cart'
+    })
+  },
   // 查看商品详情
   viewProduct: function(e) {
     const id = e.currentTarget.dataset.id
