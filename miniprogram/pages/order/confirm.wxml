@@ -1,2 +1,174 @@
-<!--pages/order/confirm.wxml-->
-<text>pages/order/confirm.wxml</text>
+<view class="container">
+  <!-- 地址信息 -->
+  <view class="address-section" bindtap="chooseAddress">
+    <view wx:if="{{address}}" class="address-info">
+      <view class="address-icon"></view>
+      <view class="address-content">
+        <view class="contact-info">
+          <text class="name">{{address.userName}}</text>
+          <text class="phone">{{address.telNumber}}</text>
+        </view>
+        <view class="address-detail">
+          {{address.provinceName}}{{address.cityName}}{{address.countyName}}{{address.detailInfo}}
+        </view>
+      </view>
+      <view class="arrow-right"></view>
+    </view>
+    <view wx:else class="no-address">
+      <view class="address-icon"></view>
+      <text>请选择收货地址</text>
+      <view class="arrow-right"></view>
+    </view>
+  </view>
+  
+  <!-- 订单商品 -->
+  <view class="order-items">
+    <view class="section-title">订单商品</view>
+    <view class="item-list">
+      <view class="order-item" wx:for="{{orderItems}}" wx:key="id">
+        <image class="item-image" src="{{item.image}}" mode="aspectFill"></image>
+        <view class="item-info">
+          <view class="item-name">{{item.name}}</view>
+          <view class="item-price-qty">
+            <text class="item-price">¥{{item.price}}</text>
+            <text class="item-quantity">x{{item.quantity}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+    <view class="order-summary">
+      <text>共{{totalCount}}件商品</text>
+      <text>小计：¥{{totalPrice}}</text>
+    </view>
+  </view>
+  
+  <!-- 配送方式 -->
+  <view class="delivery-section">
+    <view class="section-title">配送方式</view>
+    <view class="delivery-options">
+      <view 
+        class="delivery-option {{deliveryMethod === 'delivery' ? 'selected' : ''}}" 
+        bindtap="switchDeliveryMethod" 
+        data-method="delivery"
+      >
+        <view class="option-radio">
+          <view class="radio-inner" wx:if="{{deliveryMethod === 'delivery'}}"></view>
+        </view>
+        <text>送货上门</text>
+        <text class="delivery-fee" wx:if="{{deliveryMethod === 'delivery'}}">
+          {{deliveryFee > 0 ? '配送费¥' + deliveryFee : '免配送费'}}
+        </text>
+      </view>
+      <view 
+        class="delivery-option {{deliveryMethod === 'pickup' ? 'selected' : ''}}" 
+        bindtap="switchDeliveryMethod" 
+        data-method="pickup"
+      >
+        <view class="option-radio">
+          <view class="radio-inner" wx:if="{{deliveryMethod === 'pickup'}}"></view>
+        </view>
+        <text>到店自取</text>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 支付方式 -->
+  <view class="payment-section">
+    <view class="section-title">支付方式</view>
+    <view class="payment-options">
+      <view 
+        class="payment-option {{paymentMethod === 'online' ? 'selected' : ''}}" 
+        bindtap="switchPaymentMethod" 
+        data-method="online"
+      >
+        <view class="option-radio">
+          <view class="radio-inner" wx:if="{{paymentMethod === 'online'}}"></view>
+        </view>
+        <view class="payment-icon online"></view>
+        <text>在线支付</text>
+      </view>
+      <view 
+        class="payment-option {{paymentMethod === 'cod' ? 'selected' : ''}}" 
+        bindtap="switchPaymentMethod" 
+        data-method="cod"
+      >
+        <view class="option-radio">
+          <view class="radio-inner" wx:if="{{paymentMethod === 'cod'}}"></view>
+        </view>
+        <view class="payment-icon cod"></view>
+        <text>货到付款</text>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 优惠券 -->
+  <view class="discount-section" wx:if="{{discounts.length > 0}}">
+    <view class="section-title">优惠券</view>
+    <view class="discount-options">
+      <view 
+        class="discount-option {{appliedDiscount && appliedDiscount.id === item.id ? 'selected' : ''}}" 
+        wx:for="{{discounts}}" 
+        wx:key="id"
+        bindtap="selectDiscount"
+        data-id="{{item.id}}"
+      >
+        <view class="discount-info">
+          <view class="discount-value">¥{{item.value}}</view>
+          <view class="discount-name">{{item.name}}</view>
+        </view>
+        <view class="discount-select">
+          <view class="option-radio">
+            <view class="radio-inner" wx:if="{{appliedDiscount && appliedDiscount.id === item.id}}"></view>
+          </view>
+        </view>
+      </view>
+      
+      <view class="no-discount" wx:if="{{appliedDiscount}}" bindtap="removeDiscount">
+        <text>不使用优惠</text>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 订单备注 -->
+  <view class="remark-section">
+    <view class="section-title">订单备注</view>
+    <view class="remark-input">
+      <textarea 
+        placeholder="请填写备注信息，如餐具数量、特殊需求等" 
+        bindinput="onRemarkInput"
+        value="{{remark}}"
+        maxlength="100"
+      ></textarea>
+      <view class="remark-count">{{remark.length}}/100</view>
+    </view>
+  </view>
+  
+  <!-- 订单金额 -->
+  <view class="order-total">
+    <view class="total-row">
+      <text>商品金额</text>
+      <text>¥{{totalPrice}}</text>
+    </view>
+    <view class="total-row">
+      <text>配送费</text>
+      <text>¥{{deliveryFee}}</text>
+    </view>
+    <view class="total-row" wx:if="{{appliedDiscount}}">
+      <text>优惠券</text>
+      <text class="discount-text">-¥{{appliedDiscount.value}}</text>
+    </view>
+    <view class="total-row final">
+      <text>实付金额</text>
+      <text class="final-price">¥{{finalPrice}}</text>
+    </view>
+  </view>
+  
+  <!-- 底部结算栏 -->
+  <view class="confirm-footer">
+    <view class="total-section">
+      <text>合计：</text>
+      <text class="footer-price">¥{{finalPrice}}</text>
+    </view>
+    <view class="submit-btn" bindtap="submitOrder">提交订单</view>
+  </view>
+</view>
