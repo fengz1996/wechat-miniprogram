@@ -275,25 +275,35 @@ Page({
   // 处理结算按钮点击
 // 在cart.js中修改checkout函数
 
-  checkout() {
-    console.log('点击了结算按钮');
-    console.log('地址信息:', this.data.address);
-    
-    if (!this.data.address) {
-      wx.showToast({ title: '请选择收货地址', icon: 'none' });
-      return;
-    }
-    
-    // 检查地址格式
-    console.log('准备跳转到结算页面');
-    wx.navigateTo({
-      url: '/pages/order/confirm',
-      success: function() {
-        console.log('成功跳转');
-      },
-      fail: function(err) {
-        console.error('跳转失败:', err);
-      }
+checkout: function() {
+  // 检查是否有选中的商品
+  const cart = this.data.cartItems;
+  const selectedItems = cart.filter(item => item.selected);
+  
+  if (selectedItems.length === 0) {
+    wx.showToast({
+      title: '请选择要结算的商品',
+      icon: 'none'
     });
+    return;
   }
+  
+  // 检查是否有地址
+  if (!this.data.address) {
+    wx.showToast({
+      title: '请选择收货地址',
+      icon: 'none'
+    });
+    return;
+  }
+  
+  // 保存结算商品和地址到本地存储
+  wx.setStorageSync('checkoutItems', selectedItems);
+  wx.setStorageSync('checkoutAddress', this.data.address);
+  
+  // 导航到订单确认页面
+  wx.navigateTo({
+    url: '/pages/order/confirm?fromCart=true'
+  });
+}
 });
