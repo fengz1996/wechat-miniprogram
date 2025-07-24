@@ -1,1 +1,34 @@
-/* pages/address-edit/address-edit.wxss */
+.address-edit-container {
+  background: #fff;
+  min-height: 100vh;
+  padding: 60rpx 36rpx 0 36rpx;
+}
+.form-group {
+  margin-bottom: 48rpx;
+}
+.form-label {
+  font-size: 28rpx;
+  color: #666;
+  margin-bottom: 12rpx;
+  display: block;
+}
+.form-input {
+  width: 100%;
+  font-size: 32rpx;
+  color: #333;
+  padding: 20rpx 16rpx;
+  border: 1rpx solid #eee;
+  border-radius: 16rpx;
+  background: #f9f9f9;
+}
+.submit-btn {
+  width: 100%;
+  background: linear-gradient(90deg,#ff8c1a,#ff6500);
+  color: #fff;
+  font-size: 32rpx;
+  border-radius: 36rpx;
+  height: 80rpx;
+  font-weight: 700;
+  margin-top: 32rpx;
+  border: none;
+}

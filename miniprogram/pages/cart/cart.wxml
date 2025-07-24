@@ -1,97 +1,59 @@
-<view class="container">
-  <block wx:if="{{!showEmpty}}">
-    <!-- 地址选择 -->
-    <view class="address-section" bindtap="chooseAddress">
-      <view wx:if="{{address}}" class="address-info">
-        <view class="address-icon"></view>
-        <view class="address-content">
-          <view class="contact-info">
-            <text class="name">{{address.userName}}</text>
-            <text class="phone">{{address.telNumber}}</text>
-          </view>
-          <view class="address-detail">
-            {{address.provinceName}}{{address.cityName}}{{address.countyName}}{{address.detailInfo}}
-          </view>
-        </view>
-        <view class="arrow-right"></view>
+<view class="cart-container">
+  <!-- 收货地址栏 -->
+  <view class="address-bar" bindtap="editAddress">
+    <block wx:if="{{address}}">
+      <view class="address-info">
+        <text class="address-name">{{address.name}}</text>
+        <text class="address-phone">{{address.phone}}</text>
+        <text class="address-detail">{{address.detail}}</text>
       </view>
-      <view wx:else class="no-address">
-        <view class="address-icon"></view>
+      <view class="address-edit">修改地址</view>
+    </block>
+    <block wx:else>
+      <view class="address-empty">
         <text>请选择收货地址</text>
-        <view class="arrow-right"></view>
+        <view class="address-add">+ 添加地址</view>
       </view>
-    </view>
-    
-    <!-- 购物车列表 -->
+    </block>
+  </view>
+
+  <!-- 购物车商品列表 -->
+  <block wx:if="{{cartItems.length > 0}}">
     <view class="cart-list">
       <view class="cart-item" wx:for="{{cartItems}}" wx:key="id">
-        <view class="select-checkbox" bindtap="toggleItemSelect" data-index="{{index}}">
-          <view class="checkbox {{item.selected ? 'checked' : ''}}"></view>
-        </view>
-        
-        <view class="item-content" bindtap="viewProduct" data-id="{{item.id}}">
-          <view class="item-image">
-            <!-- 优先使用真实图片，如无则使用CSS样式 -->
-            <block wx:if="{{item.image}}">
-              <image class="product-img" src="{{item.image}}" mode="aspectFill"></image>
-            </block>
-            <block wx:else>
-              <view class="product-image-placeholder {{item.imageClass}}"></view>
-            </block>
-          </view>
-          
-          <view class="item-info">
-            <view class="item-name">{{item.name}}</view>
-            
-            <view class="item-bottom">
-              <view class="item-price">¥{{item.price}}</view>
-              
-              <view class="quantity-control">
-                <view class="quantity-btn minus {{item.quantity <= 1 ? 'disabled' : ''}}" 
-                      catchtap="decreaseQuantity" data-index="{{index}}">
-                  <view class="icon-minus"></view>
-                </view>
-                <view class="quantity-display">{{item.quantity}}</view>
-                <view class="quantity-btn plus" catchtap="increaseQuantity" data-index="{{index}}">
-                  <view class="icon-plus"></view>
-                </view>
-              </view>
+        <image class="cart-img" src="{{item.image}}" mode="aspectFill"></image>
+        <view class="cart-info">
+          <view class="cart-title">{{item.name}}</view>
+          <view class="cart-desc">{{item.desc}}</view>
+          <view class="cart-bottom">
+            <view class="cart-price">¥{{item.price}}</view>
+            <view class="cart-qty">
+              <button class="qty-btn" size="mini" data-index="{{index}}" bindtap="decreaseQuantity">-</button>
+              <text class="qty-num">{{item.quantity}}</text>
+              <button class="qty-btn" size="mini" data-index="{{index}}" bindtap="increaseQuantity">+</button>
             </view>
           </view>
         </view>
-        
-        <view class="delete-btn" catchtap="removeItem" data-index="{{index}}">
-          <view class="icon-delete"></view>
-        </view>
+        <button class="del-btn" size="mini" data-index="{{index}}" bindtap="removeItem">删除</button>
       </view>
     </view>
   </block>
-  
-  <!-- 空购物车状态 -->
-  <view class="empty-cart" wx:if="{{showEmpty}}">
-    <view class="empty-icon"></view>
-    <view class="empty-text">购物车空空如也~</view>
-    <view class="empty-subtext">去添加一些美食吧</view>
-    <button class="btn-go-shopping" bindtap="goShopping">去购物</button>
-  </view>
-  
-  <!-- 底部结算栏 - 注意：放在block外面确保即使其他部分有问题也能显示 -->
-  <view class="cart-footer" wx:if="{{!showEmpty}}">
-    <view class="select-all" bindtap="toggleAllSelect">
-      <view class="checkbox {{allSelected ? 'checked' : ''}}"></view>
-      <text>全选</text>
+  <block wx:else>
+    <view class="empty-cart">
+      <image src="../../images/empty_cart.png" class="empty-img"></image>
+      <view class="empty-text">购物车空空如也</view>
+      <button class="empty-btn" bindtap="goShopping">去首页逛逛</button>
     </view>
-    
-    <view class="total-info">
+  </block>
+
+  <!-- 底部结算栏 -->
+  <view class="cart-footer">
+    <view class="footer-left">
       <text>合计：</text>
-      <text class="total-price">¥{{totalPrice}}</text>
+      <text class="footer-price">¥{{totalPrice}}</text>
     </view>
-    
-    <button class="checkout-btn {{selectedCount === 0 ? 'disabled' : ''}}" bindtap="checkout">
-      立即支付 ({{selectedCount}})
+    <button class="checkout-btn" bindtap="checkout" disabled="{{cartItems.length === 0}}">
+      去结算 ({{selectedCount}})
     </button>
   </view>
-  
-  <!-- 底部安全区域 -->
-  <view class="safe-area-bottom"></view>
 </view>
