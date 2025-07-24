@@ -8,6 +8,7 @@
     "pages/order-detail/order-detail",
     "pages/profile/profile",
     "pages/address/address",
+    "pages/order/confirm",
     "pages/address-edit/address-edit"
   ],
   "window": {
