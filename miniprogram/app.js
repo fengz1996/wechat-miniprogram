@@ -89,7 +89,7 @@ App({
     token: '',
     userInfo: null,
     statusBarHeight: 20,
-    apiBaseUrl: 'http://43.139.235.149:5004',  // 小程序API基础URL
+    apiBaseUrl: 'http://121.40.188.76:5003',  // 小程序API基础URL
     cart: [],  // 购物车数据
     cartTotal: 0,  // 购物车总价格
     cartCount: 0   // 购物车商品数量

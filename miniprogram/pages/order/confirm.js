@@ -212,222 +212,304 @@ Page({
 
     // 构建订单数据
     const orderData = {
-      items: this.data.orderItems,
-      address: this.data.address,
-      totalPrice: this.data.totalPrice,
-      deliveryFee: this.data.deliveryFee,
-      discount: this.data.appliedDiscount,
-      finalPrice: this.data.finalPrice,
-      remark: this.data.remark,
-      paymentMethod: this.data.paymentMethod,
-      deliveryMethod: this.data.deliveryMethod,
-      orderTime: new Date().toISOString(),
-      status: 'pending', // 待支付状态
-      orderDate: this.formatDate(new Date()) // 格式化后的日期，用于显示
+      items: this.data.orderItems.map(item => ({
+        id: item.id,
+        quantity: item.quantity
+      })),
+      customerName: this.data.address.userName,
+      phone: this.data.address.telNumber,
+      address: `${this.data.address.provinceName}${this.data.address.cityName}${this.data.address.countyName}${this.data.address.detailInfo}`,
+      remark: this.data.remark
     };
 
-    // 模拟提交订单过程
+    // 显示加载提示
     wx.showLoading({
       title: '正在提交订单...'
     });
 
-    setTimeout(() => {
-      // 生成订单编号
-      const timestamp = Date.now();
-      const randomNum = Math.floor(Math.random() * 1000);
-      const orderId = 'WX' + timestamp.toString() + randomNum.toString().padStart(3, '0');
-      orderData.orderId = orderId;
-
-      // 保存订单到本地存储
-      const orders = wx.getStorageSync('orders') || [];
-      orders.unshift(orderData);
-      wx.setStorageSync('orders', orders);
-
-      // 清空结算数据
-      wx.removeStorageSync('checkoutItems');
-
-      // 清空购物车中已结算的商品
-      const cart = wx.getStorageSync('cart') || [];
-      const newCart = cart.filter(item => !item.selected);
-      wx.setStorageSync('cart', newCart);
-
+    // 获取应用实例和token
+    const app = getApp();
+    const token = this.getToken();
+    
+    // 如果没有token，提示用户登录
+    if (!token) {
       wx.hideLoading();
+      wx.showToast({
+        title: '请先登录',
+        icon: 'none'
+      });
+      // 可以选择跳转到登录页面
+      return;
+    }
 
-      // 根据支付方式处理
-      if (this.data.paymentMethod === 'online') {
-        this.processPayment(orderId, parseFloat(this.data.finalPrice));
-      } else {
-        // 货到付款，直接显示订单成功
-        wx.showToast({
-          title: '下单成功',
-          icon: 'success'
-        });
+    // 请求后端创建订单
+    wx.request({
+      url: app.globalData.apiBaseUrl + '/mp/api/orders',
+      method: 'POST',
+      header: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + token
+      },
+      data: orderData,
+      success: (res) => {
+        wx.hideLoading();
+        
+        if (res.data.code === 200) {
+          // 订单创建成功
+          const orderResult = res.data.data;
+          
+          // 清空结算数据
+          wx.removeStorageSync('checkoutItems');
 
-        // 更新订单状态为待发货
-        this.updateOrderStatus(orderId, 'awaiting_shipment');
-        
-        // 跳转到订单列表页
-        setTimeout(() => {
-          wx.switchTab({
-            url: '/pages/order/order'
-          });
-        }, 1500);
-      }
-    }, 1000);
-  },
-  
-// 处理支付 - 真实实现版本
-processPayment: function(orderId, amount) {
-  console.log(`准备支付订单: ${orderId}, 金额: ${amount}`);
-  
-  // 显示加载提示
-  wx.showLoading({
-    title: '请求支付中...'
-  });
-  
-  // 获取应用实例
-  const app = getApp();
-  
-  // 从app.js中获取API基础URL
-  const apiBaseUrl = app.globalData.apiBaseUrl;
-  
-  // 将元转换为分 (微信支付以分为单位)
-  const totalFee = Math.floor(amount * 100);
-  
-  // 构建请求数据
-  const requestData = {
-    order_id: orderId,
-    total_fee: totalFee,
-    body: '巴巴美食-订单支付',
-    openid: app.globalData.userInfo ? app.globalData.userInfo.openid : '',
-    trade_type: 'JSAPI'  // 小程序支付类型固定为JSAPI
-  };
-  
-  console.log('发送到后端的支付请求数据:', requestData);
-  
-  // 请求后端统一下单接口
-  wx.request({
-    url: apiBaseUrl + '/mp/api/pay/create_order',  // 与Python后端的支付接口路径匹配
-    method: 'POST',
-    header: {
-      'content-type': 'application/json',
-      'Authorization': 'Bearer ' + (app.globalData.token || '')
-    },
-    data: requestData,
-    success: (res) => {
-      wx.hideLoading();
-      
-      console.log('支付接口返回数据:', res.data);
-      
-      if (res.data.code === 200 && res.data.data) {
-        // 获取后端返回的支付参数
-        const payParams = res.data.data;
-        
-        // 调用微信支付接口
-        wx.requestPayment({
-          timeStamp: payParams.timeStamp,
-          nonceStr: payParams.nonceStr,
-          package: payParams.package,
-          signType: payParams.signType || 'MD5',
-          paySign: payParams.paySign,
-          success: (result) => {
-            console.log('支付成功', result);
+          // 清空购物车中已结算的商品
+          const cart = wx.getStorageSync('cart') || [];
+          const newCart = cart.filter(item => !this.data.orderItems.some(orderItem => orderItem.id === item.id));
+          wx.setStorageSync('cart', newCart);
+          
+          // 更新app中的购物车数据
+          app.globalData.cart = newCart;
+          app.updateCartData();
+
+          // 根据支付方式处理
+          if (this.data.paymentMethod === 'online') {
+            this.processPayment(orderResult.orderId, parseFloat(this.data.finalPrice));
+          } else {
+            // 货到付款，直接显示订单成功
+            wx.showToast({
+              title: '下单成功',
+              icon: 'success'
+            });
             
-            // 支付成功后，调用支付结果查询接口
-            this.checkPaymentResult(orderId);
-          },
-          fail: (err) => {
-            console.log('支付失败或取消', err);
-            
-            if (err.errMsg !== 'requestPayment:fail cancel') {
-              wx.showToast({
-                title: '支付失败',
-                icon: 'none'
-              });
-            } else {
-              wx.showToast({
-                title: '支付已取消',
-                icon: 'none'
-              });
-            }
-            
-            // 跳转到订单详情页
+            // 跳转到订单列表页
             setTimeout(() => {
-              wx.redirectTo({
-                url: '/pages/order-detail/order-detail?id=' + orderId
+              wx.switchTab({
+                url: '/pages/order/order'
               });
             }, 1500);
           }
-        });
-      } else {
-        // 处理后端返回的错误
-        const errorMsg = res.data.message || '创建支付订单失败';
+        } else {
+          // 处理订单创建失败
+          wx.showToast({
+            title: res.data.message || '创建订单失败',
+            icon: 'none'
+          });
+        }
+      },
+      fail: (error) => {
+        wx.hideLoading();
+        console.error('提交订单失败:', error);
+        
         wx.showToast({
-          title: errorMsg,
+          title: '网络请求失败，请重试',
           icon: 'none'
         });
-        
-        console.error('获取支付参数失败:', res.data);
       }
-    },
-    fail: (error) => {
-      wx.hideLoading();
-      console.error('请求支付接口失败:', error);
+    });
+  },
+  
+  // 获取token的辅助方法
+  getToken: function() {
+    const app = getApp();
+    // 首先尝试从全局变量获取token
+    let token = app.globalData.token;
+    
+    // 如果全局变量中没有token，尝试从本地存储获取
+    if (!token) {
+      token = wx.getStorageSync('token');
       
+      // 如果从本地存储获取到了token，更新全局变量
+      if (token) {
+        app.globalData.token = token;
+      }
+    }
+    
+    return token;
+  },
+  
+  // 处理支付
+  processPayment: function(orderId, amount) {
+    console.log(`准备支付订单: ${orderId}, 金额: ${amount}`);
+    
+    // 显示加载提示
+    wx.showLoading({
+      title: '请求支付中...'
+    });
+    
+    // 获取应用实例
+    const app = getApp();
+    
+    // 获取token
+    const token = this.getToken();
+    
+    if (!token) {
+      wx.hideLoading();
       wx.showToast({
-        title: '网络请求失败',
+        title: '登录已过期，请重新登录',
         icon: 'none'
       });
+      return;
     }
-  });
-},
-
-// 检查支付结果
-checkPaymentResult: function(orderId) {
-  const app = getApp();
-  const apiBaseUrl = app.globalData.apiBaseUrl;
-  
-  wx.showLoading({
-    title: '确认支付结果...'
-  });
-  
-  // 请求后端查询支付结果
-  wx.request({
-    url: apiBaseUrl + '/mp/api/pay/query',
-    method: 'GET',
-    header: {
-      'Authorization': 'Bearer ' + (app.globalData.token || '')
-    },
-    data: {
-      order_id: orderId
-    },
-    success: (res) => {
-      wx.hideLoading();
-      
-      if (res.data.code === 200 && res.data.data && res.data.data.trade_state === 'SUCCESS') {
-        // 支付成功
-        this.updateOrderStatus(orderId, 'paid');
+    
+    // 将元转换为分 (微信支付以分为单位)
+    const totalFee = Math.floor(amount * 100);
+    
+    // 构建请求数据
+    const requestData = {
+      order_id: orderId,
+      total_fee: totalFee,
+      body: '巴巴美食-订单支付'
+    };
+    
+    console.log('发送到后端的支付请求数据:', requestData);
+    
+    // 请求后端统一下单接口
+    wx.request({
+      url: app.globalData.apiBaseUrl + '/mp/api/pay/create_order',
+      method: 'POST',
+      header: {
+        'content-type': 'application/json',
+        'Authorization': 'Bearer ' + token
+      },
+      data: requestData,
+      success: (res) => {
+        wx.hideLoading();
+        
+        console.log('支付接口返回数据:', res.data);
+        
+        if (res.data.code === 200 && res.data.data) {
+          // 获取后端返回的支付参数
+          const payParams = res.data.data;
+          
+          // 调用微信支付接口
+          wx.requestPayment({
+            timeStamp: payParams.timeStamp,
+            nonceStr: payParams.nonceStr,
+            package: payParams.package,
+            signType: payParams.signType || 'MD5',
+            paySign: payParams.paySign,
+            success: (result) => {
+              console.log('支付成功', result);
+              
+              // 支付成功后，调用支付结果查询接口
+              this.checkPaymentResult(orderId);
+            },
+            fail: (err) => {
+              console.log('支付失败或取消', err);
+              
+              if (err.errMsg !== 'requestPayment:fail cancel') {
+                wx.showToast({
+                  title: '支付失败',
+                  icon: 'none'
+                });
+              } else {
+                wx.showToast({
+                  title: '支付已取消',
+                  icon: 'none'
+                });
+              }
+              
+              // 跳转到订单详情页
+              setTimeout(() => {
+                wx.redirectTo({
+                  url: '/pages/order-detail/order-detail?id=' + orderId
+                });
+              }, 1500);
+            }
+          });
+        } else {
+          // 处理后端返回的错误
+          const errorMsg = res.data.message || '创建支付订单失败';
+          wx.showToast({
+            title: errorMsg,
+            icon: 'none'
+          });
+          
+          console.error('获取支付参数失败:', res.data);
+        }
+      },
+      fail: (error) => {
+        wx.hideLoading();
+        console.error('请求支付接口失败:', error);
         
         wx.showToast({
-          title: '支付成功',
-          icon: 'success'
+          title: '网络请求失败',
+          icon: 'none'
         });
+      }
+    });
+  },
+
+  // 检查支付结果
+  checkPaymentResult: function(orderId) {
+    const app = getApp();
+    
+    // 获取token
+    const token = this.getToken();
+    
+    if (!token) {
+      wx.showToast({
+        title: '登录已过期，请重新登录',
+        icon: 'none'
+      });
+      return;
+    }
+    
+    wx.showLoading({
+      title: '确认支付结果...'
+    });
+    
+    // 请求后端查询支付结果
+    wx.request({
+      url: app.globalData.apiBaseUrl + '/mp/api/pay/query',
+      method: 'GET',
+      header: {
+        'Authorization': 'Bearer ' + token
+      },
+      data: {
+        order_id: orderId
+      },
+      success: (res) => {
+        wx.hideLoading();
         
-        // 跳转到订单列表页
-        setTimeout(() => {
-          wx.switchTab({
-            url: '/pages/order/order'
+        if (res.data.code === 200 && res.data.data && res.data.data.trade_state === 'SUCCESS') {
+          // 支付成功
+          wx.showToast({
+            title: '支付成功',
+            icon: 'success'
           });
-        }, 1500);
-      } else {
-        // 支付可能还在处理中或失败
-        const message = res.data.data && res.data.data.trade_state_desc 
-          ? res.data.data.trade_state_desc 
-          : '支付结果确认失败';
+          
+          // 跳转到订单列表页
+          setTimeout(() => {
+            wx.switchTab({
+              url: '/pages/order/order'
+            });
+          }, 1500);
+        } else {
+          // 支付可能还在处理中或失败
+          const message = res.data.data && res.data.data.trade_state_desc 
+            ? res.data.data.trade_state_desc 
+            : '支付结果确认失败';
+          
+          wx.showModal({
+            title: '支付提示',
+            content: '系统正在确认您的支付结果，请稍后在订单页面查看状态',
+            showCancel: false,
+            success: () => {
+              // 跳转到订单详情页
+              wx.redirectTo({
+                url: '/pages/order-detail/order-detail?id=' + orderId
+              });
+            }
+          });
+        }
+      },
+      fail: (error) => {
+        wx.hideLoading();
+        console.error('查询支付结果失败:', error);
         
         wx.showModal({
           title: '支付提示',
-          content: '系统正在确认您的支付结果，请稍后在订单页面查看状态',
+          content: '系统无法确认您的支付结果，请稍后在订单页面查看状态',
           showCancel: false,
           success: () => {
             // 跳转到订单详情页
@@ -437,35 +519,7 @@ checkPaymentResult: function(orderId) {
           }
         });
       }
-    },
-    fail: (error) => {
-      wx.hideLoading();
-      console.error('查询支付结果失败:', error);
-      
-      wx.showModal({
-        title: '支付提示',
-        content: '系统无法确认您的支付结果，请稍后在订单页面查看状态',
-        showCancel: false,
-        success: () => {
-          // 跳转到订单详情页
-          wx.redirectTo({
-            url: '/pages/order-detail/order-detail?id=' + orderId
-          });
-        }
-      });
-    }
-  });
-},
-  
-  // 更新订单状态
-  updateOrderStatus: function(orderId, status) {
-    const orders = wx.getStorageSync('orders') || [];
-    const orderIndex = orders.findIndex(order => order.orderId === orderId);
-    
-    if (orderIndex >= 0) {
-      orders[orderIndex].status = status;
-      wx.setStorageSync('orders', orders);
-    }
+    });
   },
   
   // 格式化日期
